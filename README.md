@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Asset Track Web
 
-## Getting Started
+Plataforma moderna para la gestión y seguimiento operativo de activos corporativos.
 
-First, run the development server:
+## Características
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+*   **Dashboard Ejecutivo**: Métricas en tiempo real.
+*   **Gestión de Inventario**: Listado, filtrado, búsqueda y visualización de activos.
+*   **Asignaciones**:
+    *   **Modo Entrega**: Asignación de equipos en stock a usuarios.
+    *   **Modo Devolución**: Retorno de equipos asignados al inventario.
+*   **Etiquetas Inteligentes**: Generación automática de códigos QR para cada activo.
+*   **Base de Datos**: Integración robusta con PostgreSQL (Vercel Postgres).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Configuración Local
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1.  **Instalar dependencias**:
+    ```bash
+    npm install
+    ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2.  **Configurar Variables de Entorno**:
+    Copia el archivo de ejemplo y rellena con tus credenciales.
+    ```bash
+    cp .env.example .env.local
+    ```
+    *   `POSTGRES_URL`: URL de conexión a tu base de datos Vercel Postgres.
+    *   `NEXT_PUBLIC_BASE_URL`: URL base de la aplicación (ej. `http://localhost:3000` localmente).
 
-## Learn More
+3.  **Ejecutar Servidor de Desarrollo**:
+    ```bash
+    npm run dev
+    ```
+    Abre [http://localhost:3000](http://localhost:3000) en tu navegador.
 
-To learn more about Next.js, take a look at the following resources:
+## Despliegue en Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1.  Importa este repositorio en Vercel.
+2.  En la configuración del proyecto, añade las **Variables de Entorno** definidas en `.env.example`.
+    *   **Importante**: Cambia `NEXT_PUBLIC_BASE_URL` a la URL de tu dominio en producción (ej. `https://asset-track-web.vercel.app`).
+3.  Conecta tu base de datos Vercel Postgres (Vercel Storage).
+4.  Despliega.
