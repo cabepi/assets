@@ -54,7 +54,7 @@ export default async function UsersPage({
 
                 {/* Table */}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                    <table className="w-full">
+                    <table className="w-full" suppressHydrationWarning>
                         <thead>
                             <tr className="bg-slate-50 border-b border-slate-200">
                                 <th className="text-left p-4 text-sm font-bold text-slate-600">Nombre</th>
