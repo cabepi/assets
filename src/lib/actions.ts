@@ -147,3 +147,113 @@ export async function returnAsset(formData: FormData) {
     revalidatePath('/inventory');
     redirect('/assignments');
 }
+
+export async function updateAssetLocation(formData: FormData) {
+    const assetId = formData.get('assetId') as string;
+    const newLocationId = formData.get('locationId') as string;
+    const notes = formData.get('notes') as string;
+
+    try {
+        // 1. Get current location for history
+        const currentAsset = await sql`SELECT location_id FROM asset.fixed_assets WHERE asset_id = ${assetId}`;
+        const previousLocationId = currentAsset.rows[0]?.location_id || null;
+
+        // 2. Update Asset Location
+        await sql`
+            UPDATE asset.fixed_assets 
+            SET location_id = ${Number(newLocationId)}
+            WHERE asset_id = ${assetId}
+        `;
+
+        // 3. Log History
+        await sql`
+            INSERT INTO asset.location_history (asset_id, previous_location_id, new_location_id, reason)
+            VALUES (${assetId}, ${previousLocationId}, ${Number(newLocationId)}, ${notes})
+        `;
+
+    } catch (error) {
+        console.error('Failed to update location:', error);
+        throw new Error('Failed to update location');
+    }
+
+    revalidatePath(`/inventory/${assetId}`);
+}
+
+export async function logMaintenance(formData: FormData) {
+    const assetId = formData.get('assetId') as string;
+    const type = formData.get('type') as string;
+    const date = formData.get('date') as string;
+    const cost = formData.get('cost') as string;
+    const description = formData.get('description') as string;
+    const performedBy = formData.get('performedBy') as string;
+    const setStatusMaintenance = formData.get('setStatusMaintenance') === 'on';
+
+    try {
+        // 1. Log the maintenance event
+        await sql`
+            INSERT INTO asset.maintenance_logs (
+                asset_id, maintenance_date, maintenance_type, description, cost, performed_by
+            ) VALUES (
+                ${assetId}, ${date}::date, ${type}, ${description}, ${Number(cost)}, ${performedBy}
+            )
+        `;
+
+        // 2. Optionally update status to 'maintenance'
+        if (setStatusMaintenance) {
+            await sql`
+                UPDATE asset.fixed_assets 
+                SET status = 'maintenance' 
+                WHERE asset_id = ${assetId}
+            `;
+        }
+    } catch (error) {
+        console.error('Failed to log maintenance:', error);
+        throw new Error('Failed to log maintenance');
+    }
+
+    revalidatePath(`/inventory/${assetId}`);
+    revalidatePath('/inventory');
+}
+
+export async function recoverAsset(formData: FormData) {
+    const assetId = formData.get('assetId') as string;
+
+    try {
+        await sql`
+            UPDATE asset.fixed_assets 
+            SET status = 'stock' 
+            WHERE asset_id = ${assetId}
+        `;
+    } catch (error) {
+        console.error('Failed to recover asset:', error);
+        throw new Error('Failed to recover asset');
+    }
+
+    revalidatePath(`/inventory/${assetId}`);
+    revalidatePath('/inventory');
+}
+
+export async function retireAsset(formData: FormData) {
+    const assetId = formData.get('assetId') as string;
+    const reason = formData.get('reason') as string;
+    const date = formData.get('date') as string;
+    const salvageValue = formData.get('salvageValue') as string;
+
+    try {
+        await sql`
+            UPDATE asset.fixed_assets
+            SET 
+                status = 'retired',
+                retirement_date = ${date}::date,
+                retirement_reason = ${reason},
+                salvage_value = ${Number(salvageValue)}
+            WHERE asset_id = ${assetId}
+        `;
+    } catch (error) {
+        console.error('Failed to retire asset:', error);
+        throw new Error('Failed to retire asset');
+    }
+
+    revalidatePath(`/inventory/${assetId}`);
+    revalidatePath('/inventory');
+}

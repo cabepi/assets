@@ -256,3 +256,51 @@ export async function getDepreciationMetrics() {
         projection // Array of values for the chart
     };
 }
+
+export async function getLocationHistory(assetId: string) {
+    const result = await sql`
+        SELECT 
+            h.history_id,
+            h.changed_at,
+            h.reason,
+            prev.name as prev_location,
+            curr.name as new_location
+        FROM asset.location_history h
+        LEFT JOIN asset.locations prev ON h.previous_location_id = prev.location_id
+        LEFT JOIN asset.locations curr ON h.new_location_id = curr.location_id
+        WHERE h.asset_id = ${assetId}
+        ORDER BY h.changed_at DESC
+    `;
+
+    return result.rows.map(row => ({
+        id: row.history_id,
+        date: formatDate(row.changed_at),
+        reason: row.reason,
+        prevLocation: row.prev_location || 'N/A',
+        newLocation: row.new_location
+    }));
+}
+
+export async function getMaintenanceLogs(assetId: string) {
+    const result = await sql`
+        SELECT 
+            log_id,
+            maintenance_date,
+            maintenance_type,
+            description,
+            cost,
+            performed_by
+        FROM asset.maintenance_logs
+        WHERE asset_id = ${assetId}
+        ORDER BY maintenance_date DESC
+    `;
+
+    return result.rows.map(row => ({
+        id: row.log_id,
+        date: formatDate(row.maintenance_date),
+        type: row.maintenance_type,
+        description: row.description,
+        cost: Number(row.cost),
+        performedBy: row.performed_by
+    }));
+}

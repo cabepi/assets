@@ -1,10 +1,15 @@
-import { getAssetById } from "@/lib/data";
+import { getAssetById, getLocationHistory, getMaintenanceLogs } from "@/lib/data";
 import { notFound } from "next/navigation";
 import { AssetDetailsView } from "@/components/features/assets/AssetDetailsView";
 
 export default async function VerifyAssetPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const asset = await getAssetById(id);
+
+    const [asset, locationHistory, maintenanceLogs] = await Promise.all([
+        getAssetById(id),
+        getLocationHistory(id),
+        getMaintenanceLogs(id)
+    ]);
 
     if (!asset) {
         notFound();
@@ -15,5 +20,13 @@ export default async function VerifyAssetPage({ params }: { params: Promise<{ id
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
     const qrValue = `${baseUrl}/verify/${asset.id}`;
 
-    return <AssetDetailsView asset={asset} qrValue={qrValue} isPublic={true} />;
+    return (
+        <AssetDetailsView
+            asset={asset}
+            qrValue={qrValue}
+            isPublic={true}
+            locationHistory={locationHistory}
+            maintenanceLogs={maintenanceLogs}
+        />
+    );
 }

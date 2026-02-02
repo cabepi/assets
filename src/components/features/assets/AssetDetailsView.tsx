@@ -5,9 +5,12 @@ interface AssetDetailsViewProps {
     asset: any; // Ideally stricter type
     qrValue: string;
     isPublic?: boolean;
+    actions?: React.ReactNode;
+    locationHistory?: any[];
+    maintenanceLogs?: any[];
 }
 
-export function AssetDetailsView({ asset, qrValue, isPublic = false }: AssetDetailsViewProps) {
+export function AssetDetailsView({ asset, qrValue, isPublic = false, actions, locationHistory = [], maintenanceLogs = [] }: AssetDetailsViewProps) {
     return (
         <>
             <Header title={`Activo: ${asset.assetTag}`} />
@@ -20,7 +23,8 @@ export function AssetDetailsView({ asset, qrValue, isPublic = false }: AssetDeta
                             <h1 className="text-3xl font-black text-slate-900">{asset.name}</h1>
                             <span className={`px-2.5 py-0.5 rounded text-xs font-bold uppercase
                                 ${asset.status === 'stock' ? 'bg-blue-100 text-blue-700' :
-                                    asset.status === 'assigned' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700'}`}>
+                                    asset.status === 'assigned' ? 'bg-green-100 text-green-700' :
+                                        asset.status === 'retired' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-700'}`}>
                                 {asset.status}
                             </span>
                         </div>
@@ -29,6 +33,7 @@ export function AssetDetailsView({ asset, qrValue, isPublic = false }: AssetDeta
 
                     {!isPublic && (
                         <div className="flex gap-2">
+                            {actions}
                             <button className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg font-bold text-slate-700 hover:bg-slate-50">
                                 <span className="material-symbols-outlined">edit</span>
                                 Editar
@@ -41,7 +46,17 @@ export function AssetDetailsView({ asset, qrValue, isPublic = false }: AssetDeta
                     {/* Main Info */}
                     <div className="md:col-span-2 flex flex-col gap-6">
 
-                        {asset.assignedTo && (
+                        {asset.status === 'retired' && (
+                            <div className="bg-red-50 p-6 rounded-xl border border-red-100 shadow-sm">
+                                <h2 className="text-lg font-bold text-red-900 mb-2 flex items-center gap-2">
+                                    <span className="material-symbols-outlined">block</span>
+                                    Activo Dado de Baja
+                                </h2>
+                                <p className="text-red-800 text-sm">Este activo fue retirado del inventario. Razón: <strong>{asset.specs?.retirementReason || 'No especificada'}</strong></p>
+                            </div>
+                        )}
+
+                        {asset.assignedTo && asset.status === 'assigned' && (
                             <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 shadow-sm relative overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-10">
                                     <span className="material-symbols-outlined text-9xl text-blue-900">person</span>
@@ -93,6 +108,61 @@ export function AssetDetailsView({ asset, qrValue, isPublic = false }: AssetDeta
                             </dl>
                         </div>
 
+                        {/* Location History - Always show if data exists */}
+                        {locationHistory.length > 0 && (
+                            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                                <h2 className="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-slate-400">history</span>
+                                    Historial de Ubicación
+                                </h2>
+                                <div className="space-y-4">
+                                    {locationHistory.map((log: any) => (
+                                        <div key={log.id} className="flex gap-4 text-sm border-l-2 border-slate-200 pl-4 py-1">
+                                            <div className="flex-shrink-0 w-24 text-slate-500 font-mono text-xs">{log.date}</div>
+                                            <div>
+                                                <p className="font-medium text-slate-900">
+                                                    Movido a <span className="font-bold">{log.newLocation}</span>
+                                                </p>
+                                                <p className="text-slate-500 text-xs">Desde: {log.prevLocation} • {log.reason || 'Sin notas'}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Maintenance Logs - Always show if data exists */}
+                        {maintenanceLogs.length > 0 && (
+                            <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                                <h2 className="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100 flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-slate-400">build_circle</span>
+                                    Historial de Mantenimiento
+                                </h2>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left text-sm">
+                                        <thead>
+                                            <tr className="border-b border-slate-100 text-slate-500">
+                                                <th className="pb-2 font-medium">Fecha</th>
+                                                <th className="pb-2 font-medium">Tipo</th>
+                                                <th className="pb-2 font-medium">Descr.</th>
+                                                <th className="pb-2 font-medium">Costo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-50">
+                                            {maintenanceLogs.map((log: any) => (
+                                                <tr key={log.id}>
+                                                    <td className="py-2 text-slate-500 font-mono text-xs">{log.date}</td>
+                                                    <td className="py-2"><span className="px-2 py-0.5 bg-slate-100 rounded text-xs">{log.type}</span></td>
+                                                    <td className="py-2 text-slate-700">{log.description}</td>
+                                                    <td className="py-2 font-bold text-slate-900">${log.cost}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                             <h2 className="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Especificaciones Técnicas</h2>
                             <div className="grid grid-cols-2 gap-4">
@@ -107,7 +177,7 @@ export function AssetDetailsView({ asset, qrValue, isPublic = false }: AssetDeta
 
                     </div>
 
-                    {/* Sidebar / QR - Only show QR download internally. Externally just show QR ? or hide it since they are already scanning it? 
+                    {/* Sidebar / QR - Only show QR download internally. Externally just show QR ? or hide it since they are already scanning it?
                         Let's show it but maybe simplified.
                     */}
                     <div className="flex flex-col gap-6">
