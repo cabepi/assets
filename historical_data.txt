@@ -1,0 +1,258 @@
+Name	Rol	Unidad	Dirección / Area	Activo	Marca / Modelo	asset_tag	serial number	Fecha compra	Nombre del equipo	Estado TIC
+Francis Mariñez	Estrategico	Desarrollo de Software	Desarrollo de Software	iPhone	iPad Pro 13-inch	1513	D249YLVQVQ	N/A	N/A	Asignada
+Carmen Turbides	Estrategico	Auditoria	Presidencia	Laptop	DELL Latitude 5540	1226	4XZNFS3		UNLT02	Asignada
+Gina Cordero	Estrategico	Comercial, Mercadeo y Comiunicaciones	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5550	1390	9R5QZ24		UNLT166	Asignada
+Gina Cordero	Estrategico	Comercial, Mercadeo y Comiunicaciones	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5550	1389	BR5QZ24		UNLT164	Asignada
+Francis Mariñez	Estrategico	Desarrollo de Software	Desarrollo de Software	Laptop	DELL Latitude 5540	1277	C100GX3		UNLT40	Asignada
+Candida Hernandez	Estrategico	Estrategia y Administración	Estrategia y Administración	Laptop	DELL Latitude 5550	1380	2Q5QZ24		UNLT169	Asignada
+Gina Ogando	Estrategico	Factoria Software I	Desarrollo de Software	Laptop	DELL Latitude 5540	1252	CVXXLS3		UNLT22	Asignada
+Lucas Gaitan	Estrategico	Presidencia	Presidencia	Laptop	DELL Latitude 5540	1308	29F15Y3	2023-12-15	UNLT148	Asignada
+Lucas Gaitan	Estrategico	Presidencia	Presidencia	Laptop	DELL Latitude 5540	1319	DBF15Y3	2023-12-15	UNLT94	Asignada
+Jennifer Calcaño	Estrategico	Servicios a la Seguridad Social	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1275	DT20GX3		UNLT44	Asignada
+Francisco Guillermo	Estrategico	Tecnologia	Tecnologia	Laptop	HP ProBook 455 G9	2700	5CD238N0SM		UNLT131	Asignada
+Francisco Guillermo	Estrategico	Tecnologia	Tecnologia	Laptop	DELL Latitude 5540	1267	8200GX3		UNLT41	Asignada
+Gina Cordero	Estrategico	Comercial, Mercadeo y Comiunicaciones	Comercial, Mercadeo y Comiunicaciones	iPhone	iPhone 16 pro Max 256GB	N/A	F9TT2M67NG	2025-01-24	N/A	Asignada
+Teresa Correas	Estrategico	Innovación y Tecnologias Emergentes	Innovación y Tecnologias Emergentes	iPhone	iPhone 16 pro 256GB	N/A	H5QKP3471K	2024-12-03	N/A	Asignada
+Francis Mariñez	Estrategico	Desarrollo de Software	Desarrollo de Software	Android	Samsung ZFOLD5	N/A	RFCW7192XAF	2024-06-26	N/A	Asignada
+Carmen Turbides	Estrategico	Auditoria	Presidencia	iPhone	iPhone 16 pro 256GB	N/A	D7623HL2D3	2024-12-03	NA	Asignada
+Candida Hernandez	Estrategico	Estrategia y Administración	Estrategia y Administración	iPhone	iPhone 16 pro 256GB	N/A	DMX79F2C6P	2024-12-03	NA	Asignada
+Ingrid Gonzalez	Estrategico	Factoria Salud Digital	Desarrollo de Software	iPhone	iPhone 16 pro 256GB	N/A	GWFWVHG022	2024-12-03	N/A	Asignada
+Rocio Vargas	Estrategico	Planificación y Control	Planificación y Control	iPhone	iPhone 16 pro 256GB	N/A	C6T90PV7Q9	2024-12-03	N/A	Asignada
+Lucas Gaitan	Estrategico	Presidencia	Presidencia	iPhone	iPhone 16 pro Max 256GB	N/A	DVXQ640X1N	2024-12-22	NA	Asignada
+Jennifer Calcaño	Estrategico	Servicios a la Seguridad Social	Servicio a la Seguridad Social	iPhone	iPhone 16 pro 256GB	N/A	KK2QK0VVYV	2024-12-03	NA	Asignada
+Francisco Guillermo	Estrategico	Tecnologia	Tecnologia	iPhone	iPhone 16 pro 256GB	N/A	L067TCF34Q	2024-12-03	NA	Asignada
+Conserje (Solo uso en oficina)	Externo	Logística y Servicios Generales	Estrategia y Administración	Android	Samsung A20	N/A	R9AMC1HQR9J	2020-12-01	NA	En reparación
+Yomaris Rodriguez	Gerente	Capital Humano	Estrategia y Administración	Laptop	DELL Latitude 5540	1269	JR20GX3		UNLT57	Asignada
+Miguel Angel Ramirez	Gerente	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1278	J000GX3		UNLT59	Asignada
+Engels Santos	Gerente	Estrategia y Administración	Estrategia y Administración	Laptop	DELL Latitude 5540	1329	GJD15Y3	2023-12-15	UNLT142	Asignada
+Teodoro Gonzalez	Gerente	Finanzas	Estrategia y Administración	Laptop	DELL Latitude 5540	1265	H000GX3		UNLT55	Asignada
+Luis Amaro	Gerente	Infraestructura	Tecnologia	Laptop	DELL Latitude 5540	1311	8JD15Y3	2023-12-15	UNLT78	Asignada
+Luis Amaro	Gerente	Infraestructura	Tecnologia	Laptop	DELL XPS	1361	8RQGQ04		UNLT180	Asignada
+Yudelka Roberts	Gerente	Legal	Estrategia y Administración	Laptop	DELL Latitude 5540	1303	BJD15Y3	2023-12-15	UNLT73	Asignada
+Yira Hernández	Gerente	Mercadeo y Comunicaciones	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1332	HGD15Y3	2023-12-15	UNLT134	Asignada
+Juan Pablo Alonso	Gerente	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1306	1HD15Y3	2023-12-15	UNLT81	Asignada
+Karla González	Gerente	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5550	1382	B7WGM34		UNLT193	Asignada
+Maricris González	Gerente	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1297	2BF15Y3	2023-12-15	UNLT88	Asignada
+Dilena Sanchez	Gerente	Oper. Plataformas Emergentes	Tecnologia	Laptop	DELL Latitude 5540	1341	G8CRKY3	2023-12-15	UNLT136	Asignada
+Claudia Andujar	Gerente	Proyectos	Planificación y Control	Laptop	DELL Latitude 5540	1305	7HD15Y3	2023-12-15	UNLT92	Asignada
+Arilyn Jiménez	Gerente	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1347	78CRKY3	2023-12-15	UNLT114	Asignada
+Luciano Gomez	Gerente	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Laptop	HP ProBook 455 G9	2701	5CD2397Y8N		UNLT163	Asignada
+Gina Peña	Gerente	Salud Digital (Soporte y Servicio)	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1317	JGD15Y3	2023-12-15	UNLT75	Asignada
+Carmen Quiñones	Gerente	SGSI y Ciberseguridad	Estrategia y Administración	Laptop	DELL Latitude 5540	1230	8VZNFS3		UNLT160	Asignada
+Claudia Andujar	Gerente	Proyectos	Planificación y Control	Android	Samsung A22 128GB	N/A	R9WW30FSBBA	2023-05-30	N/A	Asignada
+Carmen Quiñones	Gerente	SGSI y Ciberseguridad	Estrategia y Administración	Android	Samsung A22 128GB	N/A	R9WW30FS3DV	2023-05-30	NA	Asignada
+Miguel Angel Ramirez	Gerente	Desarrollo de Sistemas	Servicio a la Seguridad Social	iPhone	iPhone 15 128GB	N/A	JW6HW2QWMN	2024-10-01	NA	Asignada
+Engels Santos	Gerente	Estrategia y Administración	Estrategia y Administración	iPhone	Iphone 14 Pro 128GB	N/A	H9CXRQ6L76	2022-09-16	NA	Asignada
+Teodoro Gonzalez	Gerente	Finanzas	Estrategia y Administración	iPhone	iPhone 15 128GB	N/A	G2373R3QPP	2025-03-14	NA	Asignada
+Luis Amaro	Gerente	Infraestructura	Tecnologia	iPhone	iPhone 15 128GB	N/A	HK04G2DYD7	2024-12-03	NA	Asignada
+Yudelka Roberts	Gerente	Legal	Estrategia y Administración	iPhone	Iphone 13 Pro 256GB	N/A	TCJKQVPYW9	2022-09-16	NA	Asignada
+Johanna Rojas	Gerente	Logística y Servicios Generales	Estrategia y Administración	iPhone	iPhone 15 128GB	N/A	MN9KXWCFFP	2024-12-03	NA	Asignada
+Yira Hernández	Gerente	Mercadeo y Comunicaciones	Comercial, Mercadeo y Comiunicaciones	iPhone	iPhone 15 128GB	N/A	MT449LHQY4	2024-10-01	N/A	Asignada
+Juan Pablo Alonso	Gerente	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	iPhone	iPhone 15 128GB	N/A	KM40967HK6	2024-10-01	N/A	Asignada
+Karla González	Gerente	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	iPhone	iPhone 15 128GB	N/A	GQRV7JVMVP	2024-10-01	N/A	Asignada
+Karla González	Gerente	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Tablet	TCL 9166G	N/A	MZMZ9TIF7PEQBAFA		N/A	Asignada
+Maricris González	Gerente	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	iPhone	iPhone 15 128GB	N/A	HY23PNYPW6	2024-10-01	N/A	Asignada
+Gabriel Marmolejos	Gerente	Infraestructura	Tecnologia	iPhone	iPhone 15 128GB	N/A	KXGKN3WY2K	2025-03-14	NA	Asignada
+Arilyn Jimenez	Gerente	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	iPhone	iPhone 15 128GB	N/A	FMCWW7YX35	2024-10-01	N/A	Asignada
+Luciano Gomez	Gerente	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	iPhone	iPhone 15 128GB	N/A	G2KH7916HL	2024-10-01	N/A	Asignada
+Gina Peña	Gerente	Salud Digital (Soporte y Servicio)	Comercial, Mercadeo y Comiunicaciones	iPhone	Iphone 14 Pro 128GB	N/A	D0G22HQM74	2022-09-16	N/A	Asignada
+Yudelka Velasquez	Gerente	Servicio al Cliente	Servicio a la Seguridad Social	iPhone	iPhone 15 128GB	N/A	LD1H4H2XHQ	2024-10-01	NA	Asignada
+Alexander Rodriguez	Operativo	Arquitectura soliciones	Desarrollo de Software	Laptop	DELL Latitude 5540	1257	1XXXLS3		UNLT27	Asignada
+Francisco Gil	Operativo	Arquitectura soliciones	Desarrollo de Software	Laptop	DELL Latitude 5540	1312	FGD15Y3	2023-12-15	UNLT85	Asignada
+Marcos Perez	Operativo	Base de Datos	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1340	89CRKY3	2023-12-15	UNLT108	Asignada
+Anuard Michelén	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1255	JWXXLS3		UNLT09	Asignada
+Enmanuel Batista	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	HP ProBook 455 G9	2697	5CD238N0SV		UNLT126	Asignada
+Erickson Suero	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1336	2HD15Y3	2023-12-15	UNLT93	Asignada
+Gloury Piñeyro	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1300	5HD15Y3	2023-12-15	UNLT82	Asignada
+Hipolito Lopez	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1246	JVXXLS3		UNLT19	Asignada
+Jose De Leon	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1325	7BF15Y3	2023-12-15	UNLT107	Asignada
+Josue Ferrera	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1328	5KD15Y3	2023-12-15	UNLT102	Asignada
+Sandy Ramirez	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1343	F8CRKY3	2023-12-15	UNLT101	Asignada
+Alejandro Cortorreal	Operativo	Factoria Software I	Desarrollo de Software	Laptop	DELL Latitude 5540	1261	HWXXLS3		UNLT14	Asignada
+Damian Evangelista	Operativo	Factoria Software I	Desarrollo de Software	Laptop	DELL Latitude 5540	1258	9VXXLS3		UNLT33	Asignada
+Elvin Guzman	Operativo	Factoria Software I	Desarrollo de Software	Laptop	DELL Latitude 5540	1251	CXXXLS3		UNLT25	Asignada
+Gerson Lamarche	Operativo	Factoria Software I	Desarrollo de Software	Laptop	DELL Latitude 5540	1298	3CF15Y3	2023-12-15	UNLT109	Asignada
+Isaac Avelino	Operativo	Factoria Software I	Desarrollo de Software	Laptop	DELL Latitude 5540	1262	2WXXLS3		UNLT31	Asignada
+Jerermy Solano	Operativo	Factoria Software I	Desarrollo de Software	Laptop	DELL Latitude 5540	1273	BT20GX3		UNLT64	Asignada
+Raysom Almánzar	Operativo	Factoria Software I	Desarrollo de Software	Laptop	DELL Latitude 5540	1239	6WXXLS3		UNLT28	Asignada
+Samuel Vilorio	Operativo	Factoria Software I	Desarrollo de Software	Laptop	DELL Latitude 5540	1270	5S20GX3		UNLT66	Asignada
+Tulio Mercedes	Operativo	Factoria Software I	Desarrollo de Software	Laptop	DELL Latitude 5540	1241	3WXXLS3		UNLT10	Asignada
+Amy Martinez	Operativo	Factoria Software II	Desarrollo de Software	Laptop	DELL Latitude 5540	1274	H200GX3		UNLT51	Asignada
+Andromedis Beltre	Operativo	Factoria Software II	Desarrollo de Software	Laptop	DELL Latitude 5540	1245	4YXXLS3		UNLT18	Asignada
+Luis Caraballo	Operativo	Factoria Software II	Desarrollo de Software	Laptop	DELL Latitude 5550	1385	1Q5QZ24		UNLT161	Asignada
+Esdra Encarnacion	Operativo	Factoria Software II	Desarrollo de Software	Laptop	DELL Latitude 5540	1253	BXXXLS3		UNLT183	Asignada
+Gabriel Perez	Operativo	Factoria Software II	Desarrollo de Software	Laptop	HP ProBook 455 G9	2698	5CD2397Y9Z		UNLT62	Asignada
+Gerson Santos	Operativo	Factoria Software II	Desarrollo de Software	Laptop	DELL Latitude 5540	1276	7200GX3		UNLT172	Asignada
+Sadia Cuello	Operativo	Factoria Software II	Desarrollo de Software	Laptop	DELL Latitude 5540	1248	2YXXLS3		UNLT21	Asignada
+Sadia Cuello	Operativo	Factoria Software II	Desarrollo de Software	Android	Samsung A20	N/A	R9AMC1HRTHJ		Asignada
+Angel Parra	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1327	9JD15Y3	2023-12-15	UNLT128	Asignada
+Esther Estrella	Operativo	Finanzas	Estrategia y Administración	Laptop	DELL Latitude 5540	1309	6BF15Y3	2023-12-15	UNLT80	Asignada
+Francisco Mateo	Operativo	Finanzas	Estrategia y Administración	Laptop	DELL Latitude 5540	1266	BR20GX3		UNLT54	Asignada
+Gabriel Marmolejos	Operativo	Infraestructura	Tecnologia	Laptop	DELL Latitude 5540	1225	DXZNFS3		UNLT03	Asignada
+Jadison Abreu	Operativo	Infraestructura	Tecnologia	Laptop	DELL Latitude 5540	1235	DPZNFS3		UNLT68	Asignada
+Raymund Mejía	Operativo	Infraestructura	Tecnologia	Laptop	DELL Latitude 5540	1315	19F15Y3	2023-12-15	UNLT74	Asignada
+Yeicol Camacho	Operativo	Infraestructura	Tecnologia	Laptop	DELL Latitude 5540	1373	G36PF14	2024-05-27	UNLT149	Asignada
+Tandry Leguen	Operativo	Legal	Estrategia y Administración	Laptop	DELL Latitude 5550	1377	3R5QZ24		UNLT178	Asignada
+Dannerys Nuñez	Operativo	Logística y Servicios Generales	Estrategia y Administración	Laptop	DELL Latitude 5540	1334	BHD15Y3	2023-12-15	UNLT137	Asignada
+Bianca Mariñez	Operativo	Mercadeo y Comunicaciones	Comercial, Mercadeo y Comiunicaciones	Laptop	HP ProBook 450 G7	2639	5CD0455KQJ		UNLT48	Asignada
+Lanhya Suriel	Operativo	Mercadeo y Comunicaciones	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Precision 3591	1350	GNRYH04	2023-12-15	UNLT118	Asignada
+Ana Luisa Fernandez	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1349	C8CRKY3	2023-12-15	UNLT120	Asignada
+Digna Hernandez	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1295	5JD15Y3	2023-12-15	UNLT70	Asignada
+Digna Hernandez	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A52s	N/A	R5CT44K9NPD	2025-08-21	N/A	Asignada
+Emmy Ramirez	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1314	4BF15Y3	2023-12-15	UNLT84	Asignada
+Kelvin Encarnación	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1344	79CRKY3	2023-12-15	UNLT190	Asignada
+Leticia Melendez	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1249	DXXXLS3		UNLT106	Asignada
+Ismael Paredes	Operativo	Oper. Plataformas Emergentes	Tecnologia	Laptop	DELL Latitude 5550	1378	5Q5QZ24		UNLT170	Asignada
+Jorge Luis Alamanzar	Operativo	Factoria Software II	Desarrollo de Software	Laptop	DELL Latitude 5540	1337	2KD15Y3	2023-12-15	UNLT187	Asignada
+Jorge Luis Alamanzar	Operativo	Factoria Software II	Desarrollo de Software	Android	Samsung A14 5G	N/A	R5CW51KD9SF	2023-12-15	N/A	Asignada
+Jose Suarez	Operativo	Oper. Plataformas Emergentes	Tecnologia	Laptop	DELL Latitude 5540	1345	48CRKY3	2023-12-15	UNLT143	Asignada
+Yohanna Diaz	Operativo	Oper. Plataformas Emergentes	Tecnologia	Laptop	DELL Latitude 5550	1386	HQ5QZ24	2024-10-29	UNLT186	Asignada
+Franklyn Brea	Operativo	Oper. Plataformas Emergentes	Tecnologia	Laptop	DELL Latitude 5540	1369	40DRKY3	2024-05-27	UNLT175	Asignada
+Geraldo Perez	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5550	1381	68WGM34		unlt185	Asignada
+Darfry Contreras	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1371	H26PF14	2024-05-27	UNLT151	Asignada
+Guillermo Prenza	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1313	99F15Y3	2023-12-15	UNLT77	Asignada
+Jose Payano	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Laptop	HP ProBook 450 G7	2600	5CD0455KM6	2022-01-07	UNLT129	Asignada
+Juan Castillo	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1316	JHD15Y3	2023-12-15	UNLT76	Asignada
+Carolina Zapata	Operativo	Proyectos	Planificación y Control	Laptop	DELL Latitude 5540	1263	7XXXLS3		UNLT32	Asignada
+Luis Cruz	Operativo	Proyectos	Planificación y Control	Laptop	DELL Latitude 5540	1368	136PF14	2024-05-27	UNLT152	Asignada
+Paula Garcia	Operativo	Salud Digital (Soporte y Servicio)	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1331	9GD15Y3	2023-12-15	UNLT138	Asignada
+Oscar Alcantara	Operativo	Salud Digital (Soporte y Servicio)	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5550	1387	JR5QZ24		UNLT184	Asignada
+Audris Paulino	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1339	78F15Y3	2023-12-15	UNLT111	Asignada
+Carlos Gutierrez	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	Laptop	DELL Latitude 5550	1388	3Q5QZ24		UNLT177	Asignada
+Carmen Mabely Hernandez	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1330	GHD15Y3	2023-12-15	UNLT189	Asignada
+Nadia Rodriguez	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1335	HBF15Y3	2023-12-15	UNLT97	Asignada
+Purina Hidalgo	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1272	8S20GX3		UNLT52	Asignada
+Rosa Rodriguez	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1338	1JD15Y3	2023-12-15	UNLT110	Asignada
+Sonia Telleria	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1322	4JD15Y3	2023-12-15	UNLT91	Asignada
+Vanessa Vallejo	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	Laptop	DELL Latitude 5550	1379	DQ5QZ24		UNLT194	Asignada
+Angel Garcia	Operativo	SGSI y Ciberseguridad	Estrategia y Administración	Laptop	DELL Latitude 5540	1310	DGD15Y3	2023-12-15	UNLT79	Asignada
+Jhomer Somon	Operativo	SGSI y Ciberseguridad	Estrategia y Administración	Laptop	DELL Latitude 5540	1342	98CRKY3	2023-12-15	UNLT144	Asignada
+Luis Herrera	Operativo	SGSI y Ciberseguridad	Estrategia y Administración	Laptop	DELL Latitude 5540	1233	9QZNFS3		UNLT06	Asignada
+Victor Diaz	Operativo	SGSI y Ciberseguridad	Estrategia y Administración	Laptop	DELL Latitude 5540	1372	H16PF14	2024-05-27	UNLT150	Asignada
+Carlos Pinales	Operativo	SGSI y Ciberseguridad	Tecnologia	Laptop	DELL Latitude 5550	1384	C7WGM34		UNLT168	Asignada
+Franklin Volquez	Operativo	Auditoria	Presidencia	Laptop	DELL Latitude 5550	1383	1R5QZ24		UNLT176	Asignada
+Gerson Lamarche	Operativo	Factoria Software I	Desarrollo de Software	Android	Samsung A14 5G	N/A	R5CW51KD9PW	2023-08-03	N/A	Asignada
+Sony Cespedes	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A32 5g	N/A	RFCT11EKDHA	2022-07-21	N/A	Asignada
+Ana Luisa Fernandez	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A52s	N/A	R5CT44PDV2M	2022-10-10	N/A	Asignada
+Luis Cruz	Operativo	Proyectos	Planificación y Control	Android	Samsung A52s	N/A	R5CT44PDSJF	2022-10-10	N/A	Asignada
+Isabel Santana	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A22 128GB	N/A	R9WT80MDL2A	2022-10-05	N/A	Asignada
+Leonor Ogando	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A52s	N/A	R5CT44K803A	2022-10-05	N/A	Asignada
+Ashly Inoa	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A14 5G	N/A	R5CW51KD2XB	2023-08-03	N/A	Asignada
+Frank Estevez	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A14 5G	N/A	R5CW51LLA3R	2023-08-03	N/A	Asignada
+Heidy Almonte	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A14 5G	N/A	R9AT601VSLA	2023-08-03	N/A	Asignada
+Karolin Aybar	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A14 5G	N/A	R5CW51LLB6R	2023-08-03	N/A	Asignada
+Yunely Encarnación	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A14 5G	N/A	R9AT601TRFZ	2023-08-03	N/A	Asignada
+Carlos Gutierrez	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	iPhone	iPhone 15 128GB	N/A	J71R76YJCW	2025-03-14	NA	Asignada
+Vanessa  Vallejo	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	iPhone	iPhone 15 128GB	N/A	FQ4DD7HK59	2025-03-14	NA	Asignada
+Marcos Perez	Operativo	Base de Datos	Servicio a la Seguridad Social	Android	Samsung A22 128GB	N/A	R9WT80MDNHT	2022-10-05	NA	Asignada
+America Montilla	Operativo	Factoria Salud Digital	Desarrollo de Software	Android	Samsung A22 128GB	N/A	R9WW30FSBJV	2023-05-30	N/A	Asignada
+Wilber Flores	Operativo	Factoria Salud Digital	Desarrollo de Software	Android	Samsung A14 5G	N/A	R5CW91W8CHX	2023-08-03	N/A	Asignada
+Francisco Mateo	Operativo	Finanzas	Estrategia y Administración	Android	Samsung A22 128GB	N/A	R9WT80MDKSN	2022-10-05	NA	Asignada
+Gabriel Marmolejos	Operativo	Infraestructura	Tecnologia	Android	Samsung A22 128GB	N/A	R9WT80MDM6M	2022-10-05	NA	Asignada
+Jadison Abreu	Operativo	Infraestructura	Tecnologia	Android	Samsung A22 128GB	N/A	R9WT80MDD5V	2022-10-05	NA	Asignada
+Miguel De la Cruz	Operativo	Infraestructura	Tecnologia	Android	Samsung A14 5G	N/A	R5CW51LMDJD	2023-08-03	NA	Asignada
+Yeicol Camacho	Operativo	Infraestructura	Tecnologia	Android	Samsung A25	N/A	F2LXP40DKPH5	2020-10-14	N/A	Asignada
+Dannerys Nuñez	Operativo	Logística y Servicios Generales	Estrategia y Administración	Android	Samsung A22 128GB	N/A	R9AT601R6FE	2022-10-05	NA	Asignada
+Jhomary Serrano	Operativo	Logística y Servicios Generales	Estrategia y Administración	Android	Samsung A20	N/A	R9AN10CV71J	2020-12-01	NA	Asignada
+Madeline Soto	Operativo	Logística y Servicios Generales	Estrategia y Administración	Android	Samsung A52s	N/A	R5CT50EKP0Z	2022-10-10	NA	Asignada
+Lanhya Suriel	Operativo	Mercadeo y Comunicaciones	Comercial, Mercadeo y Comiunicaciones	Android	Samsung S23	N/A	RFCW703YSVT	2023-11-24	N/A	Asignada
+Eulises Matias	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A14 5G	N/A	R5CWA3CV8DP	2023-11-24	N/A	Asignada
+Kelvin Encarnación	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A22 128GB	N/A	R9WW30FS46X	2023-05-30	N/A	Asignada
+Leticia Melendez	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A14 5G	N/A	R5CWA3CTLPH		N/A	Asignada
+Angel Parra	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Android	Samsung A22 128GB	N/A	R9AT601QN3E	2022-10-05	NA	Asignada
+Darfry Contreras	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Android	Samsung A22 128GB	N/A	R58RA31CXWV	2022-10-05	NA	Asignada
+Guillermo Prenza	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Android	Samsung A25	N/A	R5CX330XM7P	2024-05-07	NA	Asignada
+Jose Payano	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Android	Samsung A25	N/A	R5CX330T5FV	2024-05-07	NA	Asignada
+Juan Castillo	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Android	Samsung A22 128GB	N/A	R9AT601QCLF	2022-10-05	NA	Asignada
+Carolina Zapata	Operativo	Proyectos	Planificación y Control	Android	Samsung A22 128GB	N/A	R9WW30FS69F	2023-05-30	N/A	Asignada
+Oscar Alcantara	Operativo	Salud Digital (Soporte y Servicio)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A22	N/A	R58RA31CVWW	2021-12-14	N/A	Asignada
+Paula Gacia	Operativo	Salud Digital (Soporte y Servicio)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A22 128GB	N/A	R9WW30FSAZT	2023-05-30	N/A	Asignada
+Victor Díaz	Operativo	SGSI y Ciberseguridad	Estrategia y Administración	Android	Samsung A22 128GB	N/A	R9WT80MDTNJ	2022-10-05	NA	Asignada
+Jhomer Somon	Operativo	SGSI y Ciberseguridad	Estrategia y Administración	Android	Samsung A25	N/A	R5CX330WFLE	2024-05-07	NA	Asignada
+Luis Herrera	Operativo	SGSI y Ciberseguridad	Estrategia y Administración	Android	Samsung A14 5G	N/A	R5CW51KCRTK	2023-08-03	NA	Asignada
+Andrea Gonzalez	Operativo	Desarrollo de Software	Desarrollo de Software	iPhone	IPhone 12 Pro	N/A	DNQDX3WX0D80	2021-03-05	N/A	Asignada
+Juan Tavarez	Operativo	Infraestructura	Tecnologia	iPhone	iPhone 15 128GB	N/A	JWMXM3W6W5	2024-10-01	NA	Asignada
+Raymund Mejia	Operativo	Infraestructura	Tecnologia	iPhone	Iphone 14 Pro 128GB	N/A	R9N36DJ79J	2022-09-16	NA	Asignada
+Constancio Bocio	Operativo	Logística y Servicios Generales	Estrategia y Administración	iPhone	iPhone 15 128GB	N/A	K9GVWV7LPV	2024-10-01	NA	Asignada
+Andromedis Beltre	Operativo	Oper. Plataformas Emergentes	Tecnologia	iPhone	Iphone 13 Pro 256GB	N/A	L2JDVQL93J		NA	Asignada
+Audris Paulino	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	iPhone	Iphone 14 Pro 128GB	N/A	J0JP2W34G7	2022-09-16	NA	Asignada
+Rosa Rodriguez	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	iPhone	iPhone 15 128GB	N/A	CQ7G2XXK2C	2024-10-01	NA	Asignada
+KONEKSI WHATSAPP (Resp. Ramon R.)		Salud Digital (Soporte y Servicio)	Comercial, Mercadeo y Comiunicaciones		N/A	N/A	https://unipago-squad.monday.com/protected_static/5912503/resources/821863582/Linea%20WS%20Koneksi.JPG		N/A	Asignada
+Carmen Hernandez	Operativo	Servicio al Cliente	Servicio a la Seguridad Social	iPhone	iPhone 15 128GB	N/A	M69675HYCF	2024-10-01	NA	Asignada
+Abel Feliz	Gerente	Factoria Software II	Desarrollo de Software	Laptop	APPLE MacBook Pro 15-Inch	1427	GW9RJP9GQ9		UNLT191	Asignada
+Francis Mariñez	Estrategico	Desarrollo de Software	Desarrollo de Software	Laptop	APPLE MacBook Pro 15-Inch	1507	KJPHYF436P		UNLT30	Asignada
+Ramon Rodriguez	Gerente	Arquitectura soliciones	Desarrollo de Software	Laptop	APPLE MacBook Pro 15-Inch	1426	KXPWWY4Y7L		UNLT198	Asignada
+Samuel Paez	Operativo	Factoria Software II	Desarrollo de Software	Laptop	APPLE MacBook Pro 15-Inch	1425	HN2WL9YGYH		UNLT04	Asignada
+Harold Morillo	Operativo	Operaciones de Sistemas	Tecnologia	Laptop	Dell Pro 16 PC16250	1489	2DTH994		UNLT24	Asignada
+Wendy Garcia	Operativo	Base de Datos	Servicio a la Seguridad Social	iPhone	iPhone 15 128GB	N/A	CFPW0K71YC	2025-05-19	UNIOSCFPW0K71YC	Asignada
+Henderson Diaz	Operativo	Salud Digital (Soporte y Servicio)	Comercial, Mercadeo y Comiunicaciones	Laptop	Dell Pro 16 PC16250	1488	FCTH994		UNLT26	Asignada
+Emmy Ramírez	Operativo	Capital Humano	Estrategia y Administración	Android	Samsung A22 128GB	N/A	R9AT601R9WT	2022-10-05	NA	Disponible
+Yomaris Rodríguez	Gerente	Capital Humano	Estrategia y Administración	iPhone	iPhone 15 128GB	N/A	FFWV7YHJFX	2025-05-19	N/A	Asignada
+Ramon Rodriguez	Gerente	Arquitectura soliciones	Desarrollo de Software	iPhone	iPhone 15 128GB	N/A	F65QQJW2J6	2025-05-19		Retirado
+Abel Feliz	Gerente	Factoria Software II	Desarrollo de Software	iPhone	iPhone 15 128GB	N/A	DJK05W0J2J	2025-05-19	N/A	Asignada
+Carlos Betancur	Gerente	Factoria Software I	Desarrollo de Software	iPhone	iPhone 15 128GB	N/A	FFH4YLXKX5	2025-05-19	N/A	Asignada
+Dilena Sánchez	Gerente	Oper. Plataformas Emergentes	Tecnologia	iPhone	iPhone 15 128GB	N/A	G6V9CH9K46	2025-05-19		Asignada
+Rode Briceño	Operativo	Operaciones de Sistemas	Tecnologia	Laptop	Dell Pro 16 PC16250	1490	9CTH994		UNLT34	Asignada
+Andrea Gonzalez	Operativo	Desarrollo de Software	Desarrollo de Software	Laptop	DELL Latitude 5540	1304	CHD15Y3		UNLT37	Asignada
+Alexandra Alecon	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	Laptop	Dell Pro 16 PC16250	1491	7CTH994		UNLT35	Asignada
+Yismeiry Lopez	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A22 128GB	N/A	R58RA31DFBH	2021-12-14	N/A	Asignada
+Cenia Cid	Operativo	Planificación y Control	Planificación y Control	Laptop	Dell Pro 16 PC16250	1492	4DTH994		UNLT39	Asignada
+Ashly Inoa	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Tablet	Tab 9A+	N/A	R92XC0CENJD		Asignada
+Leonor Ogando	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Tablet	Tab 9A+	N/A	R92XC0WMC0T		Asignada
+Yunely Encarnación	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Tablet	Tab 9A+	N/A	R92XC0CEFKJ		Asignada
+Lorenza Martínez	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Tablet	Tab 9A+	N/A	R92XC0WMJCA		Asignada
+Isabel Santana	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Tablet	Tab 9A+	N/A	R92XC0WM8BZ		Asignada
+Frank Estévez	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Tablet	Tab 9A+	N/A	R92XC0CELQW		Asignada
+Karolin Aybar	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Tablet	Tab 9A+	N/A	R92XC0CED0N		Asignada
+Alexandra Alecon	Operativo	Nuevos Productos	Comercial, Mercadeo y Comiunicaciones	iPhone	iPhone 15 128GB	N/A	HN2L06W203	2025-05-19		Asignada
+Heidy Almonte	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Tablet	Tab 9A+	N/A	R92XC0CED3W		Asignada
+Ivan Sanchez	Operativo	Infraestructura	Tecnologia	Android	Samsung A36 5G	N/A	RFCY612QXTE	2025-07-08	N/A	Asignada
+Ismael Paredes	Operativo	Oper. Plataformas Emergentes	Tecnologia	Android	Samsung A36 5G	N/A	RFCY612R64H	2025-07-08		Retirado
+Lorenza Martinez	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A36 5G	N/A	RFCY612QVCN	2025-07-08		Retirado
+Iris Vidal	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A36 5G	N/A	RFCY612QWZH	2025-07-08		Asignada
+Angel Garcia	Operativo	SGSI y Ciberseguridad	Estrategia y Administración	iPhone	iPhone 15 128GB	N/A	CY6J1HHXJC	2025-05-19		Asignada
+Jose Suarez	Operativo	Oper. Plataformas Emergentes	Tecnologia	Android	Samsung A36 5G	N/A	RFCY612QVBF	2025-07-08		Asignada
+Gina Peña	Gerente	Salud Digital (Soporte y Servicio)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A22 128GB	N/A	R9AT601VDKA	2022-10-05	N/A	Asignada
+Carlos Pinales	Operativo	SGSI y Ciberseguridad	Estrategia y Administración	Android	Samsung A14 5G	N/A	R5CW91W84DA	2023-08-03	NA	Asignada
+Laidy Contreras	Operativo	Capital Humano	Estrategia y Administración	Android	Samsung A26 5G	N/A	R5CY51JX00X	2025-08-05		Retirado
+Laidy Contreras	Operativo	Capital Humano	Estrategia y Administración	Laptop	Dell Pro 16 PC16250	1503	3DTH994		UNLT121	Asignada
+Nelson Santana	Operativo	Capital Humano	Estrategia y Administración	Laptop	Dell Pro 16 PC16250	1500	DCTH994		UNLT122	Asignada
+Cenia Cid	Operativo	Planificación y Control	Planificación y Control	Android	Samsung A26 5G	N/A	R5CY51JY0BB	2025-08-05		Asignada
+Yudelka Velasquez	Gerente	Servicio al Cliente	Servicio a la Seguridad Social	Laptop	Dell Pro 16 PC16250	1497	8DTH994		UNLT127	Asignada
+Nelson Santana	Operativo	Capital Humano	Estrategia y Administración	iPhone	iPhone 15 128GB	N/A	DF3QMFKFJH	2025-05-19		Asignada
+Lisa Moya	Operativo	Capital Humano	Estrategia y Administración	Laptop	Dell Pro 16 PC16250	1493	5DTH994		UNLT135	Asignada
+Lisa Moya	Operativo	Capital Humano	Estrategia y Administración	Android	Samsung S23	N/A	RFCW702QRBK	2023-11-24	NA	Asignada
+Esther Estrella	Operativo	Finanzas	Estrategia y Administración	Android	Samsung A26 5G	N/A	R5CY51JX0GH	2025-08-05		Asignada
+Luciano Gomez	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Tablet	Tab 9A	N/A	R83Y40BYR7K		Asignada
+Alam Gomez	Operativo	Salud Digital (Soporte y Servicio)	Desarrollo de Software	Laptop	Dell Pro 16 PC16250	1484	1DTH994		UNLT130	Asignada
+Ivan Sanchez	Operativo	Infraestructura	Tecnologia	Laptop	Dell Pro 16 PC16250	1494	8CTH994		UNLT103	Asignada
+Eulises Matias	Operativo	Salud Digital (Soporte y Servicio)	Innovación y Tecnologias Emergentes	Laptop	Dell Pro 16 PC16250	1496	JCTH994		UNLT104	Asignada
+Madeline Soto	Operativo	Logística y Servicios Generales	Estrategia y Administración	Laptop	DELL Latitude 5550	1376	DR5QZ24		UNLT179	Asignada
+Joel Arias	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	Dell Pro 16 PC16250	1495	GCTH994		UNLT112	Asignada
+Rocio Vargas	Estrategico	Planificación y Control	Planificación y Control	Laptop	Dell Pro 16 PC16250	1499	BCTH994		UNLT167	Asignada
+Wilber Flores	Operativo	Factoria Salud Digital	Desarrollo de Software	Laptop	DELL Latitude 5540	1244	4XXXLS3		UNLT17	Asignada
+Jhomary Serrano	Operativo	Logística y Servicios Generales	Estrategia y Administración	Laptop	DELL Latitude 5540	1250	GVXXLS3		UNLT139	Asignada
+Cristina Silfa	Operativo	SGSI y Ciberseguridad	Estrategia y Administración	Laptop	DELL Latitude 5540	1228	2XZNFS3		UNLT132	Asignada
+Juan Adames	Operativo	Mercadeo y Comunicaciones	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A32 5g	N/A	RFCT11EKXRH		N/A	Asignada
+Conserje Madeinsa- Martha	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A22	N/A	R9AT601R89M	2022-10-05	N/A	Asignada
+Alam Gómez	Operativo	Salud Digital (Soporte y Servicio)	Desarrollo de Software	Android	Samsung A26 5G	N/A	R5CY51JXP6L	2025-05-19	NA	Asignada
+Franklin Volquez	Operativo	Auditoria	Presidencia	Android	Samsung A22 128GB	N/A	R9AT601NK4W	2022-10-05	N/A	Asignada
+Yohanna Diaz	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Android	Samsung A36 5G	N/A	RFCY612Q10Y	2025-07-08		Disponible
+Henderson Diaz	Estrategico	Mercadeo y Comunicaciones	Comercial, Mercadeo y Comiunicaciones	iPhone	iPhone 15 128GB	N/A	GD2DQV74J4	2025-05-19		Asignada
+Miguel De la Cruz	Operativo	Infraestructura	Tecnologia	Laptop	Dell Pro 16 PC16250	1485	HCTH994		UNLT23	Asignada
+Carlos Betancur	Gerente	Factoria Software I	Desarrollo de Software	Laptop	APPLE MacBook Pro 15-Inch	1515	D69ND2RDQ0		UNLT145	Asignada
+Wendy Garcia	Operativo	Base de Datos	Servicio a la Seguridad Social	Laptop	Dell Pro 16 PC16250	1486	CCTH994		UNLT115	Asignada
+Yeicol Camacho	Operativo	Infraestructura	Tecnologia	iPhone	Iphone 14 Pro 128GB	N/A	J3QCHX71H4	2023-05-16	N/A	Asignada
+America Montilla	Operativo	Factoria Salud Digital	Desarrollo de Software	Laptop	DELL Latitude 5540	1370	J26PF14	2024-05-27	UNLT196	Asignada
+Arilyn Jimenez	Gerente	Comercial, Mercadeo y Comiunicaciones	Comercial, Mercadeo y Comiunicaciones	Tablet	Tab 9A	N/A	R83Y40BYRCX		Asignada
+Benito Adames	Operativo	Logística y Servicios Generales	Estrategia y Administración	Android	Samsung A22 128GB	N/A	R9AT601QNAM	2022-10-05	N/A	Asignada
+Juan Adames	Operativo	Mercadeo y Comunicaciones	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Precision 3591	1351	HNRYH04	2023-12-15	UNLT200	Asignada
+Elin Florentino	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1242	1WXXLS3		UNLT182	Asignada
+Juan Tavarez	Estrategico	Innovación y Tecnologias Emergentes	Innovación y Tecnologias Emergentes	Laptop	APPLE MacBook Pro 13-Inc	1483	KFQLYF7VM9		UNLT100	Asignada
+Yira Hernández	Operativo	Mercadeo y Comunicaciones	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Precision 3591	1462	55KYR74		UNLT105	Asignada
+Johanna Rojas	Operativo	Logística y Servicios Generales	Comercial, Mercadeo y Comiunicaciones	Laptop	Dell Pro 16 PC16250	1487	6DTH994		UNLT113	Asignada
+Jeferson Bernabel	Operativo	Factoria Software II	Desarrollo de Software	Laptop	DELL Latitude 5540	1326	H8F15Y3	2023-12-15	UNLT146	Asignada
+Miguel Mejia	Operativo	Desarrollo de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1348	47CRKY3	2023-12-15	UNLT125	Asignada
+Guillermo Prenza	Operativo	Operaciones de Sistemas	Servicio a la Seguridad Social	Laptop	DELL Latitude 5540	1307	7JD15Y3	2023-12-15	UNLT08	Asignada
+Isabel Santana	Operativo	Salud Digital (Metro)	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1247	DVXXLS3		UNLT11	Asignada
+Frank Estevez	Operativo	Salud Digital (Norte)	Comercial, Mercadeo y Comiunicaciones	Laptop	DELL Latitude 5540	1302	1KD15Y3		UNLT192	Asignada
