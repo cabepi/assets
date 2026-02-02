@@ -188,6 +188,104 @@ export async function getUsers() {
     return result.rows.map(row => ({ id: row.user_id, name: row.full_name }));
 }
 
+export async function getUsersList(search?: string) {
+    const searchQuery = search ? `%${search}%` : null;
+
+    const result = await sql`
+        SELECT 
+            u.user_id,
+            u.full_name,
+            u.email,
+            u.department,
+            u.role,
+            u.is_active,
+            COUNT(asm.assignment_id) FILTER (WHERE asm.is_current = true) as active_assignments
+        FROM asset.users u
+        LEFT JOIN asset.assignments asm ON u.user_id = asm.user_id
+        WHERE (${searchQuery}::text IS NULL OR (u.full_name ILIKE ${searchQuery} OR u.email ILIKE ${searchQuery} OR u.department ILIKE ${searchQuery}))
+        GROUP BY u.user_id
+        ORDER BY u.full_name ASC
+    `;
+
+    return result.rows.map(row => ({
+        id: row.user_id,
+        name: row.full_name,
+        email: row.email,
+        department: row.department,
+        role: row.role,
+        isActive: row.is_active,
+        activeAssignments: Number(row.active_assignments)
+    }));
+}
+
+export async function getUserById(id: string) {
+    const result = await sql`
+        SELECT 
+            u.user_id,
+            u.full_name,
+            u.email,
+            u.department,
+            u.role,
+            u.is_active,
+            u.created_at
+        FROM asset.users u
+        WHERE u.user_id = ${id}
+    `;
+
+    const row = result.rows[0];
+    if (!row) return null;
+
+    return {
+        id: row.user_id,
+        name: row.full_name,
+        email: row.email,
+        department: row.department,
+        role: row.role,
+        isActive: row.is_active,
+        createdAt: formatDate(row.created_at)
+    };
+}
+
+export async function getUserAssignments(userId: string) {
+    const result = await sql`
+        SELECT 
+            asm.assignment_id,
+            asm.assigned_at,
+            asm.returned_at,
+            asm.is_current,
+            asm.condition_on_delivery,
+            a.asset_id,
+            a.asset_tag,
+            a.name as asset_name,
+            a.brand,
+            a.model,
+            a.serial_number,
+            c.name as category_name
+        FROM asset.assignments asm
+        JOIN asset.fixed_assets a ON asm.asset_id = a.asset_id
+        LEFT JOIN asset.categories c ON a.category_id = c.category_id
+        WHERE asm.user_id = ${userId}
+        ORDER BY asm.is_current DESC, asm.assigned_at DESC
+    `;
+
+    return result.rows.map(row => ({
+        id: row.assignment_id,
+        assignedAt: formatDate(row.assigned_at),
+        returnedAt: row.returned_at ? formatDate(row.returned_at) : null,
+        isCurrent: row.is_current,
+        condition: row.condition_on_delivery,
+        asset: {
+            id: row.asset_id,
+            assetTag: row.asset_tag,
+            name: row.asset_name,
+            brand: row.brand,
+            model: row.model,
+            serialNumber: row.serial_number,
+            category: row.category_name
+        }
+    }));
+}
+
 export async function getWarrantyAlerts() {
     const result = await sql`
         SELECT 

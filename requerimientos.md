@@ -1,4 +1,4 @@
-Para diseñar un sistema de activos fijos robusto para una empresa tecnológica, debemos estructurar las pantallas pensando en la **trazabilidad total**. Aquí tienes el detalle de las vistas principales, sus controles y los perfiles de acceso.
+Para diseñar un sistema de activos fijos robusto para una empresa tecnológica, hemos estructurado las pantallas pensando en la **trazabilidad total**. Aquí tienes el detalle de las vistas principales, sus funcionalidades y los perfiles de acceso.
 
 # 1. Dashboard Principal (Vista Ejecutiva)
 
@@ -8,8 +8,7 @@ Para diseñar un sistema de activos fijos robusto para una empresa tecnológica,
 *   **Contenido y Controles**:
     *   **KPI Cards**: Indicadores en tiempo real (SQL `count/sum`) de valor total, activos en mantenimiento y activos totales.
     *   **Gráfico de Distribución**: Activos por categoría.
-    *   **Gráfico de Depreciación**: Proyección del valor en libros (Placeholder visual).
-    *   **Alertas**: Tabla resumida de garantías.
+    *   **Alertas**: Tabla resumida de garantías por vencer (30 días).
 
 # 2. Inventario Maestro (Listado de Activos)
 
@@ -17,48 +16,70 @@ Para diseñar un sistema de activos fijos robusto para una empresa tecnológica,
 *   **Uso**: Visualización global y filtrado de todos los equipos y licencias.
 *   **Perfiles**: Administrador de IT, Soporte Técnico, Finanzas.
 *   **Funcionalidades Técnicas**:
-    *   **Búsqueda Server-Side**: Búsqueda dinámica con *debounce* (300ms) por Nombre, ID (Tag) o Modelo.
-    *   **Filtros Dinámicos**: Filtrado por **Estado** y **Categoría** (obtenidas de la BD) sincronizados por URL.
+    *   **Búsqueda Server-Side**: Búsqueda dinámica con *debounce* por Nombre, Etiqueta (Tag), Serie o Modelo.
+    *   **Filtros Dinámicos**: Filtrado por **Estado** y **Categoría**.
+    *   **Impresión por Lote**: Funcionalidad para imprimir códigos QR de múltiples activos seleccionados.
 *   **Contenido y Controles**:
-    *   **Barra de Búsqueda**: Input integrado con URL params.
-    *   **Filtros Avanzados**: Selects funcionales.
-    *   **Data Table**: Columnas de ID, Nombre, Modelo, Categoría, Estado, Fecha Compra.
-    *   **Acciones**: Botón "Nuevo Activo" y "Ver Detalle".
+    *   **Data Table**: Columnas de Etiqueta, Nombre, Modelo, Categoría, Estado, Fecha Compra.
+    *   **Acciones**: Botón "Nuevo Activo", "Ver Detalle" y "Selección Múltiple".
 
-# 3. Registro y Edición de Activo (Formulario Detallado)
+# 3. Detalle y Edición de Activo
 
 *   **Estado**: ✅ Implementado
-*   **Uso**: Alta de nuevos equipos en el sistema.
-*   **Tecnología**: Server Actions (`createAsset`) para inserción segura y rápida.
-*   **Reglas de Negocio**:
-    *   **Generación de ID**: Automática con formato `AST-YYYY-XXXX`.
-    *   **Especificaciones**: Almacenamiento flexible como JSONB.
-*   **Campos y Controles**:
-    *   **Información General**: Nombre (Req), Categoría (Dinámica), Marca, Modelo, Serie.
-    *   **Especificaciones Técnicas**: CPU, RAM, Almacenamiento, Detalles (JSON).
-    *   **Datos Financieros**: Fecha de Compra (Req), Precio (Req), Método de Depreciación.
-    *   **Documentación**: Placeholder para carga de archivos.
+*   **Uso**: Visualización profunda del ciclo de vida del activo y actualización de datos.
+*   **Funcionalidades**:
+    *   **Información Completa**: General, técnica y financiera.
+    *   **Edición**: Modal para modificar datos críticos (Etiqueta, Nombre, Specs, Costos) con validación de unicidad de Tag.
+    *   **Historial de Ubicaciones**: Timeline cronológico de movimientos.
+    *   **Bitácora de Mantenimiento**: Registro de eventos de servicio y costos.
+    *   **Código QR**: Generación dinámica apuntando a página de verificación pública.
+    *   **Acciones de Ciclo de Vida**: Mover, Registrar Mantenimiento, Dar de Baja (Retiro).
 
 # 4. Gestión de Asignaciones (Check-in / Check-out)
 
-*   **Estado**: 🚧 En Desarrollo
-*   **Uso**: Vincular o desvincular un activo de un empleado con validez legal (firma).
+*   **Estado**: ✅ Implementado
+*   **Uso**: Vincular o desvincular un activo de un empleado.
 *   **Modos**:
-    *   **Modo Entrega**: Asigna un activo en stock a un usuario. Requiere condición y firma.
+    *   **Modo Entrega**: Asigna un activo en stock a un usuario. Requiere condición de entrega.
     *   **Modo Devolución**: Retorna un activo asignado al stock. Requiere condición de retorno.
-*   **Campos y Controles**:
-    *   **Selección de Activo**: Búsqueda por Serie/Tag.
-    *   **Selección de Usuario**: Búsqueda por Nombre.
-    *   **Estado Físico**: Select (Nuevo, Excelente, Bueno, Regular, Malo).
-    *   **Fecha Efectiva**: DatePicker.
-*   **Contenido**: Tabla "Asignaciones Locales Recientes" con estado (Confirmado).
+*   **Validaciones**:
+    *   Solo activos en 'stock' pueden entregarse.
+    *   Solo activos 'assigned' pueden devolverse.
+*   **Contenido**: Historial reciente de asignaciones en la misma pantalla.
+
+# 5. Gestión de Usuarios (Consulta)
+
+*   **Estado**: ✅ Implementado
+*   **Uso**: Directorio de empleados y control de dotación tecnológica.
+*   **Funcionalidades**:
+    *   **Listado de Usuarios**: Búsqueda por nombre/email/departamento. Estadísticas de asignación.
+    *   **Detalle de Usuario**:
+        *   Perfil (Depto, Rol, Fecha Ingreso).
+        *   **Activos Actuales**: Lista de equipos en poder del usuario.
+        *   **Historial**: Registro histórico de equipos devueltos.
+
+# 6. Verificación Pública (QR)
+
+*   **Estado**: ✅ Implementado
+*   **Uso**: Acceso rápido a información del activo escaneando el código QR físico.
+*   **Seguridad**: Vista de solo lectura pública.
+*   **Contenido**:
+    *   Estado actual (Stock/Asignado).
+    *   Especificaciones básicas.
+    *   Línea de tiempo de asignaciones y mantenimientos (Auditoría).
+
+# 7. Ingesta y Migración de Datos
+
+*   **Estado**: ✅ Implementado
+*   **Usuarios**: Carga inicial desde listado de empleados (script Python).
+*   **Histórico**: Migración de activos y asignaciones históricas, mapeando estados y relaciones.
 
 ---
 
-# 5. Especificaciones Técnicas (Arquitectura)
+# 8. Especificaciones Técnicas (Arquitectura)
 
-*   **Framework**: Next.js 14+ (App Router).
+*   **Framework**: Next.js 15 (App Router).
 *   **Base de Datos**: Vercel Postgres (Neon).
-*   **Patrón de Datos**: **Raw SQL** (Sin ORM) para control total de consultas y performance.
-*   **Estilos**: Tailwind CSS con diseño limpio y moderno (SaaS B2B).
-*   **Mutaciones**: Server Actions para formularios.
+*   **Patrón de Datos**: **Raw SQL** (Sin ORM) para control total.
+*   **Estilos**: Tailwind CSS.
+*   **Mutaciones**: Server Actions para formularios y transacciones.

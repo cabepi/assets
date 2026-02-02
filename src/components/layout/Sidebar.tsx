@@ -8,6 +8,7 @@ const navItems = [
     { name: "Tablero", href: "/", icon: "dashboard" },
     { name: "Inventario", href: "/inventory", icon: "inventory_2" },
     { name: "Asignaciones", href: "/assignments", icon: "assignment_ind" },
+    { name: "Usuarios", href: "/users", icon: "group" },
     { name: "Reportes", href: "/reports", icon: "description" },
 ];
 
