@@ -178,3 +178,81 @@ export async function getUsers() {
     return result.rows.map(row => ({ id: row.user_id, name: row.full_name }));
 }
 
+export async function getWarrantyAlerts() {
+    const result = await sql`
+        SELECT 
+            a.asset_id,
+            a.name,
+            a.serial_number,
+            c.name as category_name,
+            l.name as location_name,
+            a.warranty_expiration_date
+        FROM asset.fixed_assets a
+        LEFT JOIN asset.categories c ON a.category_id = c.category_id
+        LEFT JOIN asset.locations l ON a.location_id = l.location_id
+        WHERE a.warranty_expiration_date BETWEEN CURRENT_DATE AND (CURRENT_DATE + INTERVAL '30 days')
+        ORDER BY a.warranty_expiration_date ASC
+    `;
+
+    return result.rows.map(row => ({
+        id: row.asset_id,
+        name: row.name,
+        serialNumber: row.serial_number,
+        category: row.category_name,
+        location: row.location_name,
+        expirationDate: formatDate(row.warranty_expiration_date)
+    }));
+}
+
+export async function getDepreciationMetrics() {
+    // Fetch assets with necessary data for calculation
+    // Assuming Straight Line depreciation based on category years
+    const assetsResult = await sql`
+        SELECT 
+            a.purchase_price,
+            a.purchase_date,
+            COALESCE(c.depreciation_years, 3) as useful_life_years
+        FROM asset.fixed_assets a
+        LEFT JOIN asset.categories c ON a.category_id = c.category_id
+        WHERE a.status != 'retired'
+    `;
+
+    let totalMonthlyDepreciation = 0;
+    let currentTotalBookValue = 0;
+
+    const now = new Date();
+
+    assetsResult.rows.forEach(asset => {
+        const price = Number(asset.purchase_price);
+        const usefulLifeMonths = asset.useful_life_years * 12;
+        const monthlyDepr = price / usefulLifeMonths;
+        const purchaseDate = new Date(asset.purchase_date);
+
+        // Calculate age in months
+        const ageInMilliseconds = now.getTime() - purchaseDate.getTime();
+        const ageInMonths = ageInMilliseconds / (1000 * 60 * 60 * 24 * 30.44);
+
+        // Current Book Value (cannot be less than 0)
+        const depreciationAmount = monthlyDepr * ageInMonths;
+        const bookValue = Math.max(0, price - depreciationAmount);
+
+        currentTotalBookValue += bookValue;
+
+        // If asset is still depreciating, add to fleet monthly depreciation
+        if (bookValue > 0) {
+            totalMonthlyDepreciation += monthlyDepr;
+        }
+    });
+
+    // Project next 6 points (every 2 months for the chart labels)
+    const projection = [];
+    for (let i = 0; i <= 6; i++) {
+        projection.push(Math.max(0, currentTotalBookValue - (totalMonthlyDepreciation * (i * 2))));
+    }
+
+    return {
+        currentBookValue: currentTotalBookValue,
+        monthlyRate: totalMonthlyDepreciation,
+        projection // Array of values for the chart
+    };
+}

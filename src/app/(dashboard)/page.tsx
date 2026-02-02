@@ -1,8 +1,28 @@
 import { Header } from "@/components/layout/Header";
-import { getDashboardMetrics } from "@/lib/data";
+import { getDashboardMetrics, getWarrantyAlerts, getDepreciationMetrics } from "@/lib/data";
 
 export default async function Home() {
   const metrics = await getDashboardMetrics();
+  const warrantyAlerts = await getWarrantyAlerts();
+  const depreciation = await getDepreciationMetrics();
+
+  // Graph Logic (Normalize projection to SVG ViewBox 100x40)
+  const maxVal = Math.max(...depreciation.projection) * 1.1 || 100; // Add 10% buffering
+  const minVal = Math.min(...depreciation.projection) * 0.9 || 0;
+  const range = maxVal - minVal;
+
+  // Create path points
+  // We have 7 points (0, 2, 4, 6, 8, 10, 12 months) mapping to width 0..100
+  const points = depreciation.projection.map((val, index) => {
+    const x = (index / (depreciation.projection.length - 1)) * 100;
+    // Y is inverted (0 is top, 40 is bottom). Map val relative to range.
+    // If val = max, y = 5 (padding). If val = min, y = 35.
+    const normalizedY = 35 - ((val - minVal) / range) * 30; // 30 is drawing height
+    return `${x} ${normalizedY}`;
+  });
+
+  const pathD = `M ${points.join(' L ')}`;
+  const areaD = `${pathD} L 100 40 L 0 40 Z`; // Close the area for gradient
 
   return (
     <>
@@ -27,17 +47,14 @@ export default async function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <p className="text-slate-500 text-sm font-medium">Valor Total</p>
+              <p className="text-slate-500 text-sm font-medium">Valor de Compra (Histórico)</p>
               <span className="material-symbols-outlined text-primary">account_balance</span>
             </div>
             <p className="text-3xl font-bold text-slate-900">
               ${new Intl.NumberFormat('en-US').format(metrics.totalValue)}
             </p>
             <div className="flex items-center gap-1.5 mt-1">
-              <span className="flex items-center text-emerald-600 text-sm font-bold">
-                <span className="material-symbols-outlined text-sm">trending_up</span> 5.2%
-              </span>
-              <span className="text-slate-400 text-xs font-normal">vs último trimestre</span>
+              <span className="text-slate-400 text-xs font-normal">Inversión bruta acumulada</span>
             </div>
           </div>
           <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-2">
@@ -48,7 +65,8 @@ export default async function Home() {
             <p className="text-3xl font-bold text-slate-900">{metrics.maintenanceCount}</p>
             <div className="flex items-center gap-1.5 mt-1">
               <span className="flex items-center text-orange-600 text-sm font-bold">
-                <span className="material-symbols-outlined text-sm">warning</span> 12%
+                <span className="material-symbols-outlined text-sm">warning</span>
+                {metrics.totalAssets > 0 ? ((metrics.maintenanceCount / metrics.totalAssets) * 100).toFixed(1) : 0}%
               </span>
               <span className="text-slate-400 text-xs font-normal">de la flota total</span>
             </div>
@@ -61,7 +79,8 @@ export default async function Home() {
             <p className="text-3xl font-bold text-slate-900">{metrics.totalAssets}</p>
             <div className="flex items-center gap-1.5 mt-1">
               <span className="flex items-center text-emerald-600 text-sm font-bold">
-                <span className="material-symbols-outlined text-sm">check_circle</span> 98%
+                <span className="material-symbols-outlined text-sm">check_circle</span>
+                {metrics.totalAssets - metrics.maintenanceCount}
               </span>
               <span className="text-slate-400 text-xs font-normal">operativos</span>
             </div>
@@ -97,18 +116,22 @@ export default async function Home() {
           <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
             <div className="flex items-center justify-between mb-2">
               <div>
-                <h3 className="text-slate-900 font-bold">Proyección de Depreciación</h3>
-                <p className="text-slate-500 text-xs font-medium">Amortización financiera proyectada (12 meses)</p>
+                <h3 className="text-slate-900 font-bold">Proyección de Valor (Libros)</h3>
+                <p className="text-slate-500 text-xs font-medium">Depreciación proyectada (Próximos 12 meses)</p>
               </div>
               <div className="text-right">
-                <p className="text-lg font-bold text-slate-900">$840k</p>
-                <p className="text-[10px] text-red-500 font-bold">-$12k Prom/Mes</p>
+                <p className="text-lg font-bold text-slate-900">
+                  ${new Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 }).format(depreciation.currentBookValue)}
+                </p>
+                <p className="text-[10px] text-red-500 font-bold">
+                  -${new Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 }).format(depreciation.monthlyRate)} /Mes
+                </p>
               </div>
             </div>
             <div className="h-44 flex items-end gap-1 relative pt-4">
               <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 40">
-                <path d="M0 35 Q 25 32, 50 20 T 100 5" fill="none" stroke="#137fec" strokeWidth="2" vectorEffect="non-scaling-stroke"></path>
-                <path d="M0 35 Q 25 32, 50 20 T 100 5 L 100 40 L 0 40 Z" fill="url(#grad)" opacity="0.1"></path>
+                <path d={pathD} fill="none" stroke="#137fec" strokeWidth="2" vectorEffect="non-scaling-stroke"></path>
+                <path d={areaD} fill="url(#grad)" opacity="0.1"></path>
                 <defs>
                   <linearGradient id="grad" x1="0%" x2="0%" y1="0%" y2="100%">
                     <stop offset="0%" style={{ stopColor: "#137fec", stopOpacity: 1 }}></stop>
@@ -117,13 +140,13 @@ export default async function Home() {
                 </defs>
               </svg>
               <div className="flex w-full justify-between items-end h-full z-10 pt-10">
-                <span className="text-[10px] text-slate-400 font-bold">Jul</span>
-                <span className="text-[10px] text-slate-400 font-bold">Sep</span>
-                <span className="text-[10px] text-slate-400 font-bold">Nov</span>
-                <span className="text-[10px] text-slate-400 font-bold">Ene</span>
-                <span className="text-[10px] text-slate-400 font-bold">Mar</span>
-                <span className="text-[10px] text-slate-400 font-bold">May</span>
-                <span className="text-[10px] text-slate-400 font-bold">Jul</span>
+                <span className="text-[10px] text-slate-400 font-bold">Hoy</span>
+                <span className="text-[10px] text-slate-400 font-bold">+2m</span>
+                <span className="text-[10px] text-slate-400 font-bold">+4m</span>
+                <span className="text-[10px] text-slate-400 font-bold">+6m</span>
+                <span className="text-[10px] text-slate-400 font-bold">+8m</span>
+                <span className="text-[10px] text-slate-400 font-bold">+10m</span>
+                <span className="text-[10px] text-slate-400 font-bold">+12m</span>
               </div>
             </div>
           </div>
@@ -132,9 +155,11 @@ export default async function Home() {
           <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-red-500">verified_user</span>
-              <h3 className="text-slate-900 font-bold">Alertas de Garantía (30 Días)</h3>
+              <h3 className="text-slate-900 font-bold">Alertas de Garantía (Próximos 30 Días)</h3>
             </div>
-            <button className="text-primary text-sm font-bold hover:underline">Ver Todas las Alertas</button>
+            <button className="text-primary text-sm font-bold hover:underline">
+              {warrantyAlerts.length} Alertas Activas
+            </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm border-collapse">
@@ -149,42 +174,28 @@ export default async function Home() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                <tr className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-slate-900">MacBook Pro 16&quot; - M2 Max</td>
-                  <td className="px-6 py-4 text-slate-500 font-mono text-xs">AAPL-99231-X</td>
-                  <td className="px-6 py-4">
-                    <span className="px-2 py-1 bg-slate-100 rounded text-xs font-semibold">Laptop</span>
-                  </td>
-                  <td className="px-6 py-4 text-slate-500">San Francisco, HQ</td>
-                  <td className="px-6 py-4 text-red-600 font-bold">12 Oct, 2024</td>
-                  <td className="px-6 py-4">
-                    <button className="text-primary font-bold text-xs uppercase tracking-wider hover:text-blue-700 transition-colors">Renovar</button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-slate-900">Dell PowerEdge R750</td>
-                  <td className="px-6 py-4 text-slate-500 font-mono text-xs">DELL-SRV-0042</td>
-                  <td className="px-6 py-4">
-                    <span className="px-2 py-1 bg-slate-100 rounded text-xs font-semibold">Servidor</span>
-                  </td>
-                  <td className="px-6 py-4 text-slate-500">Dublín, IE DC</td>
-                  <td className="px-6 py-4 text-orange-600 font-bold">28 Oct, 2024</td>
-                  <td className="px-6 py-4">
-                    <button className="text-primary font-bold text-xs uppercase tracking-wider hover:text-blue-700 transition-colors">Ticket Soporte</button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-slate-900">Fortinet 100F Firewall</td>
-                  <td className="px-6 py-4 text-slate-500 font-mono text-xs">FG-100F-8822</td>
-                  <td className="px-6 py-4">
-                    <span className="px-2 py-1 bg-slate-100 rounded text-xs font-semibold">Redes</span>
-                  </td>
-                  <td className="px-6 py-4 text-slate-500">Oficina Singapur</td>
-                  <td className="px-6 py-4 text-red-600 font-bold">05 Oct, 2024</td>
-                  <td className="px-6 py-4">
-                    <button className="text-primary font-bold text-xs uppercase tracking-wider hover:text-blue-700 transition-colors">Renovar</button>
-                  </td>
-                </tr>
+                {warrantyAlerts.length > 0 ? (
+                  warrantyAlerts.map(alert => (
+                    <tr key={alert.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-6 py-4 font-medium text-slate-900">{alert.name}</td>
+                      <td className="px-6 py-4 text-slate-500 font-mono text-xs">{alert.serialNumber || 'N/A'}</td>
+                      <td className="px-6 py-4">
+                        <span className="px-2 py-1 bg-slate-100 rounded text-xs font-semibold">{alert.category}</span>
+                      </td>
+                      <td className="px-6 py-4 text-slate-500">{alert.location || 'Sin asignar'}</td>
+                      <td className="px-6 py-4 text-red-600 font-bold">{alert.expirationDate}</td>
+                      <td className="px-6 py-4">
+                        <button className="text-primary font-bold text-xs uppercase tracking-wider hover:text-blue-700 transition-colors">Renovar</button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500 italic">
+                      No hay garantías próximas a vencer en los siguientes 30 días.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
