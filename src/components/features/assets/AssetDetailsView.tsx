@@ -1,5 +1,11 @@
 import { Header } from "@/components/layout/Header";
 import { QRCodeGenerator } from "@/components/features/assets/QRCodeGenerator";
+import { EditAssetButton } from "@/components/features/assets/EditAssetButton";
+
+interface Category {
+    id: number;
+    name: string;
+}
 
 interface AssetDetailsViewProps {
     asset: any; // Ideally stricter type
@@ -8,9 +14,10 @@ interface AssetDetailsViewProps {
     actions?: React.ReactNode;
     locationHistory?: any[];
     maintenanceLogs?: any[];
+    categories?: Category[];
 }
 
-export function AssetDetailsView({ asset, qrValue, isPublic = false, actions, locationHistory = [], maintenanceLogs = [] }: AssetDetailsViewProps) {
+export function AssetDetailsView({ asset, qrValue, isPublic = false, actions, locationHistory = [], maintenanceLogs = [], categories = [] }: AssetDetailsViewProps) {
     return (
         <>
             <Header title={`Activo: ${asset.assetTag}`} />
@@ -34,10 +41,7 @@ export function AssetDetailsView({ asset, qrValue, isPublic = false, actions, lo
                     {!isPublic && (
                         <div className="flex gap-2">
                             {actions}
-                            <button className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg font-bold text-slate-700 hover:bg-slate-50">
-                                <span className="material-symbols-outlined">edit</span>
-                                Editar
-                            </button>
+                            <EditAssetButton asset={asset} categories={categories} />
                         </div>
                     )}
                 </div>
@@ -90,7 +94,7 @@ export function AssetDetailsView({ asset, qrValue, isPublic = false, actions, lo
                             <h2 className="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Información General</h2>
                             <dl className="grid grid-cols-2 gap-x-4 gap-y-6">
                                 <div>
-                                    <dt className="text-sm font-medium text-slate-500">ID del Activo</dt>
+                                    <dt className="text-sm font-medium text-slate-500">Etiqueta/Tag</dt>
                                     <dd className="text-base font-bold text-slate-900 font-mono">{asset.assetTag}</dd>
                                 </div>
                                 <div>

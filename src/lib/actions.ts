@@ -257,3 +257,63 @@ export async function retireAsset(formData: FormData) {
     revalidatePath(`/inventory/${assetId}`);
     revalidatePath('/inventory');
 }
+
+export async function updateAsset(formData: FormData) {
+    const assetId = formData.get('assetId') as string;
+    const assetTag = formData.get('assetTag') as string;
+    const name = formData.get('name') as string;
+    const brand = formData.get('brand') as string;
+    const model = formData.get('model') as string;
+    const serialNumber = formData.get('serialNumber') as string;
+    const categoryId = formData.get('categoryId') as string;
+    const purchaseDate = formData.get('purchaseDate') as string;
+    const purchasePrice = formData.get('purchasePrice') as string;
+    const depreciationMethod = formData.get('depreciationMethod') as string;
+    const technicalSpecs = {
+        cpu: formData.get('cpu') as string,
+        ram: formData.get('ram') as string,
+        storage: formData.get('storage') as string,
+        details: formData.get('details') as string,
+    };
+
+    // Validation
+    if (!name || !assetTag) {
+        throw new Error("Nombre y Etiqueta/Tag son requeridos");
+    }
+
+    try {
+        // Check if asset_tag is unique (excluding current asset)
+        const existing = await sql`
+            SELECT asset_id FROM asset.fixed_assets 
+            WHERE asset_tag = ${assetTag} AND asset_id != ${assetId}
+        `;
+        if (existing.rows.length > 0) {
+            throw new Error(`La etiqueta "${assetTag}" ya existe en otro activo`);
+        }
+
+        // Update asset
+        await sql`
+            UPDATE asset.fixed_assets
+            SET 
+                asset_tag = ${assetTag},
+                name = ${name},
+                brand = ${brand},
+                model = ${model},
+                serial_number = ${serialNumber},
+                category_id = ${categoryId ? Number(categoryId) : null},
+                purchase_date = ${purchaseDate}::date,
+                purchase_price = ${Number(purchasePrice) || 0},
+                depreciation_method = ${depreciationMethod},
+                technical_specs = ${JSON.stringify(technicalSpecs)},
+                updated_at = CURRENT_TIMESTAMP
+            WHERE asset_id = ${assetId}
+        `;
+
+    } catch (error) {
+        console.error('Failed to update asset:', error);
+        throw error;
+    }
+
+    revalidatePath(`/inventory/${assetId}`);
+    revalidatePath('/inventory');
+}

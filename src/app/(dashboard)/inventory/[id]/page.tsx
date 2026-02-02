@@ -1,4 +1,4 @@
-import { getAssetById, getLocations, getLocationHistory, getMaintenanceLogs } from "@/lib/data";
+import { getAssetById, getLocations, getLocationHistory, getMaintenanceLogs, getCategories } from "@/lib/data";
 import { notFound } from "next/navigation";
 import { AssetDetailsView } from "@/components/features/assets/AssetDetailsView";
 import { AssetActions } from "@/components/features/assets/AssetActions";
@@ -7,11 +7,12 @@ export default async function AssetDetailsPage({ params }: { params: Promise<{ i
     const { id } = await params;
 
     // Parallel data fetching
-    const [asset, locations, locationHistory, maintenanceLogs] = await Promise.all([
+    const [asset, locations, locationHistory, maintenanceLogs, categories] = await Promise.all([
         getAssetById(id),
         getLocations(),
         getLocationHistory(id),
-        getMaintenanceLogs(id)
+        getMaintenanceLogs(id),
+        getCategories()
     ]);
 
     if (!asset) {
@@ -40,6 +41,7 @@ export default async function AssetDetailsPage({ params }: { params: Promise<{ i
             actions={actions}
             locationHistory={locationHistory}
             maintenanceLogs={maintenanceLogs}
+            categories={categories}
         />
     );
 }

@@ -128,6 +128,8 @@ export async function getAssetById(id: string) {
       a.purchase_date,
       a.purchase_price,
       a.technical_specs,
+      a.depreciation_method,
+      a.category_id,
       c.name as category_name,
       l.name as location_name,
       u.full_name as assigned_user_name,
@@ -152,6 +154,11 @@ export async function getAssetById(id: string) {
         assignedAt: formatDate(row.assigned_at)
     } : null;
 
+    // Format raw date as YYYY-MM-DD for input[type=date]
+    const purchaseDateRaw = row.purchase_date
+        ? new Date(row.purchase_date).toISOString().split('T')[0]
+        : '';
+
     return {
         id: row.asset_id,
         assetTag: row.asset_tag,
@@ -161,9 +168,12 @@ export async function getAssetById(id: string) {
         serialNumber: row.serial_number,
         status: row.status,
         purchaseDate: formatDate(row.purchase_date),
+        purchaseDateRaw,
         purchasePrice: Number(row.purchase_price),
+        depreciationMethod: row.depreciation_method,
         specs: row.technical_specs, // JSONB
         category: {
+            id: row.category_id,
             name: row.category_name
         },
         location: {
