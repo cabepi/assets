@@ -1,24 +1,17 @@
 import { Header } from "@/components/layout/Header";
-import { getAssetById } from "@/lib/data";
 import { QRCodeGenerator } from "@/components/features/assets/QRCodeGenerator";
-import { notFound } from "next/navigation";
 
-export default async function AssetDetailsPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
-    const asset = await getAssetById(id);
+interface AssetDetailsViewProps {
+    asset: any; // Ideally stricter type
+    qrValue: string;
+    isPublic?: boolean;
+}
 
-    if (!asset) {
-        notFound();
-    }
-
-    // In production, use env var. Locally:
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const qrValue = `${baseUrl}/inventory/${asset.id}`;
-
+export function AssetDetailsView({ asset, qrValue, isPublic = false }: AssetDetailsViewProps) {
     return (
         <>
             <Header title={`Activo: ${asset.assetTag}`} />
-            <div className="px-10 py-8 flex flex-col gap-6 max-w-5xl mx-auto w-full">
+            <div className={`px-4 md:px-10 py-8 flex flex-col gap-6 ${isPublic ? 'max-w-3xl mx-auto' : 'max-w-5xl mx-auto'} w-full`}>
 
                 {/* Header Section */}
                 <div className="flex flex-wrap justify-between items-start gap-4">
@@ -33,17 +26,50 @@ export default async function AssetDetailsPage({ params }: { params: Promise<{ i
                         </div>
                         <p className="text-slate-500 mt-1">{asset.brand} {asset.model}</p>
                     </div>
-                    <div className="flex gap-2">
-                        <button className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg font-bold text-slate-700 hover:bg-slate-50">
-                            <span className="material-symbols-outlined">edit</span>
-                            Editar
-                        </button>
-                    </div>
+
+                    {!isPublic && (
+                        <div className="flex gap-2">
+                            <button className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg font-bold text-slate-700 hover:bg-slate-50">
+                                <span className="material-symbols-outlined">edit</span>
+                                Editar
+                            </button>
+                        </div>
+                    )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className={`grid grid-cols-1 ${isPublic ? 'md:grid-cols-1' : 'md:grid-cols-3'} gap-6`}>
                     {/* Main Info */}
                     <div className="md:col-span-2 flex flex-col gap-6">
+
+                        {asset.assignedTo && (
+                            <div className="bg-blue-50 p-6 rounded-xl border border-blue-100 shadow-sm relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-4 opacity-10">
+                                    <span className="material-symbols-outlined text-9xl text-blue-900">person</span>
+                                </div>
+                                <h2 className="text-lg font-bold text-blue-900 mb-4 pb-2 border-b border-blue-200 flex items-center gap-2">
+                                    <span className="material-symbols-outlined">badge</span>
+                                    Asignado A
+                                </h2>
+                                <dl className="grid grid-cols-2 gap-x-4 gap-y-6 relative z-10">
+                                    <div className="col-span-2">
+                                        <dt className="text-sm font-medium text-blue-700">Nombre del Empleado</dt>
+                                        <dd className="text-xl font-bold text-blue-950">{asset.assignedTo.name}</dd>
+                                    </div>
+                                    <div>
+                                        <dt className="text-sm font-medium text-blue-700">Departamento</dt>
+                                        <dd className="text-base font-medium text-blue-950">{asset.assignedTo.department}</dd>
+                                    </div>
+                                    <div>
+                                        <dt className="text-sm font-medium text-blue-700">Fecha Asignación</dt>
+                                        <dd className="text-base font-medium text-blue-950">{asset.assignedTo.assignedAt}</dd>
+                                    </div>
+                                    <div className="col-span-2">
+                                        <dt className="text-sm font-medium text-blue-700">Email</dt>
+                                        <dd className="text-base font-medium text-blue-950">{asset.assignedTo.email}</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        )}
 
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                             <h2 className="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Información General</h2>
@@ -69,7 +95,6 @@ export default async function AssetDetailsPage({ params }: { params: Promise<{ i
 
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                             <h2 className="text-lg font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Especificaciones Técnicas</h2>
-                            {/* Rendering JSONB specs cleanly */}
                             <div className="grid grid-cols-2 gap-4">
                                 {Object.entries(asset.specs as Record<string, any> || {}).map(([key, value]) => (
                                     <div key={key} className="p-3 bg-slate-50 rounded-lg">
@@ -82,14 +107,16 @@ export default async function AssetDetailsPage({ params }: { params: Promise<{ i
 
                     </div>
 
-                    {/* Sidebar / QR */}
+                    {/* Sidebar / QR - Only show QR download internally. Externally just show QR ? or hide it since they are already scanning it? 
+                        Let's show it but maybe simplified.
+                    */}
                     <div className="flex flex-col gap-6">
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                             <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                                 <span className="material-symbols-outlined text-primary">qr_code_2</span>
                                 Etiqueta Digital
                             </h2>
-                            <QRCodeGenerator value={qrValue} size={200} showDownload={true} className="w-full" />
+                            <QRCodeGenerator value={qrValue} size={200} showDownload={!isPublic} className="w-full" />
                             <div className="mt-4 text-center">
                                 <p className="text-xs text-slate-400">Escanee para verificar inventario</p>
                             </div>

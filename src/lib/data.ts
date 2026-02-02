@@ -129,15 +129,28 @@ export async function getAssetById(id: string) {
       a.purchase_price,
       a.technical_specs,
       c.name as category_name,
-      l.name as location_name
+      l.name as location_name,
+      u.full_name as assigned_user_name,
+      u.email as assigned_user_email,
+      u.department as assigned_user_dept,
+      asm.assigned_at
     FROM asset.fixed_assets a
     LEFT JOIN asset.categories c ON a.category_id = c.category_id
     LEFT JOIN asset.locations l ON a.location_id = l.location_id
+    LEFT JOIN asset.assignments asm ON a.asset_id = asm.asset_id AND asm.is_current = true
+    LEFT JOIN asset.users u ON asm.user_id = u.user_id
     WHERE a.asset_id = ${id}
   `;
 
     const row = result.rows[0];
     if (!row) return null;
+
+    const assignedTo = row.assigned_user_name ? {
+        name: row.assigned_user_name,
+        email: row.assigned_user_email,
+        department: row.assigned_user_dept,
+        assignedAt: formatDate(row.assigned_at)
+    } : null;
 
     return {
         id: row.asset_id,
@@ -155,7 +168,8 @@ export async function getAssetById(id: string) {
         },
         location: {
             name: row.location_name
-        }
+        },
+        assignedTo
     };
 }
 
