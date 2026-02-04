@@ -1,85 +1,123 @@
-Para diseñar un sistema de activos fijos robusto para una empresa tecnológica, hemos estructurado las pantallas pensando en la **trazabilidad total**. Aquí tienes el detalle de las vistas principales, sus funcionalidades y los perfiles de acceso.
+# Documentación de Funcionalidades y Requerimientos - AssetTrack Pro
+
+Este documento detalla todas las funcionalidades implementadas en el sistema de gestión de activos, incluyendo reglas de negocio, campos de datos, validaciones y arquitectura técnica.
+
+---
 
 # 1. Dashboard Principal (Vista Ejecutiva)
 
 *   **Estado**: ✅ Implementado
-*   **Uso**: Monitoreo en tiempo real del estado de los activos, próximos vencimientos y valor financiero.
-*   **Perfiles**: Administrador de IT, Gerente de Finanzas, Auditor.
-*   **Contenido y Controles**:
-    *   **KPI Cards**: Indicadores en tiempo real (SQL `count/sum`) de valor total, activos en mantenimiento y activos totales.
-    *   **Gráfico de Distribución**: Activos por categoría.
-    *   **Alertas**: Tabla resumida de garantías por vencer (30 días).
+*   **Ruta**: `/`
+*   **Funcionalidad**: Ofrece una visión global del estado del inventario y salud financiera.
+*   **Componentes Detallados**:
+    *   **KPI Cards**: Estadísticas en tiempo real mediante agregaciones SQL (`COUNT`, `SUM`).
+        *   *Valor Total*: Suma del `purchase_price` de todos los activos.
+        *   *Activos*: Conteo total de registros en `fixed_assets`.
+        *   *Mantenimiento*: Conteo de activos con `status = 'maintenance'`.
+    *   **Gráfico de Categorías**: Distribución visual de activos agrupados por `category_id`.
+    *   **Tabla de Garantías**: Listado de los próximos 5 activos cuya garantía vence en los siguientes 30 días.
 
-# 2. Inventario Maestro (Listado de Activos)
-
-*   **Estado**: ✅ Implementado
-*   **Uso**: Visualización global y filtrado de todos los equipos y licencias.
-*   **Perfiles**: Administrador de IT, Soporte Técnico, Finanzas.
-*   **Funcionalidades Técnicas**:
-    *   **Búsqueda Server-Side**: Búsqueda dinámica con *debounce* por Nombre, Etiqueta (Tag), Serie o Modelo.
-    *   **Filtros Dinámicos**: Filtrado por **Estado** y **Categoría**.
-    *   **Impresión por Lote**: Funcionalidad para imprimir códigos QR de múltiples activos seleccionados.
-*   **Contenido y Controles**:
-    *   **Data Table**: Columnas de Etiqueta, Nombre, Modelo, Categoría, Estado, Fecha Compra.
-    *   **Acciones**: Botón "Nuevo Activo", "Ver Detalle" y "Selección Múltiple".
-
-# 3. Detalle y Edición de Activo
+# 2. Inventario Maestro
 
 *   **Estado**: ✅ Implementado
-*   **Uso**: Visualización profunda del ciclo de vida del activo y actualización de datos.
-*   **Funcionalidades**:
-    *   **Información Completa**: General, técnica y financiera.
-    *   **Edición**: Modal para modificar datos críticos (Etiqueta, Nombre, Specs, Costos) con validación de unicidad de Tag.
-    *   **Historial de Ubicaciones**: Timeline cronológico de movimientos.
-    *   **Bitácora de Mantenimiento**: Registro de eventos de servicio y costos.
-    *   **Código QR**: Generación dinámica apuntando a página de verificación pública.
-    *   **Acciones de Ciclo de Vida**: Mover, Registrar Mantenimiento, Dar de Baja (Retiro).
+*   **Ruta**: `/inventory`
+*   **Funcionalidad**: Gestión centralizada, búsqueda y filtrado del parque tecnológico.
+*   **Capacidades Técnicas**:
+    *   **Búsqueda Global**: Input con *debounce* de 300ms que busca coincidencias en `name`, `asset_tag`, `model`, o `serial_number`.
+    *   **Filtros Persistentes**: Selectores de **Categoría** y **Estado** que sincronizan su estado con los parámetros URL (`?category=...&status=...`), permitiendo compartir búsquedas.
+    *   **Impresión de Etiquetas**: Selección múltiple (checkboxes) para generar una planilla de impresión con códigos QR de los activos seleccionados.
+*   **Datos en Tabla**: Etiqueta (Tag), Activo (Nombre + Imagen placeholder), Modelo, Categoría, Estado (Badge con color dinámico), Fecha Compra, Precio, Acciones.
 
-# 4. Gestión de Asignaciones (Check-in / Check-out)
+# 3. Gestión Detallada del Activo
 
 *   **Estado**: ✅ Implementado
-*   **Uso**: Vincular o desvincular un activo de un empleado.
-*   **Modos**:
-    *   **Modo Entrega**: Asigna un activo en stock a un usuario. Requiere condición de entrega.
-    *   **Modo Devolución**: Retorna un activo asignado al stock. Requiere condición de retorno.
+*   **Ruta**: `/inventory/[id]`
+*   **Funcionalidad**: Expediente digital completo del activo.
+
+### 3.1. Edición de Datos
+*   **Mecanismo**: Modal con formulario controlado (`EditAssetModal`).
 *   **Validaciones**:
-    *   Solo activos en 'stock' pueden entregarse.
-    *   Solo activos 'assigned' pueden devolverse.
-*   **Contenido**: Historial reciente de asignaciones en la misma pantalla.
+    *   **Unicidad**: El sistema valida en tiempo real (Server Action) que la `Etiqueta/Tag` no esté asignada a otro activo activo.
+*   **Secciones Editables**:
+    *   *Información General*: Etiqueta, Nombre, Marca, Modelo, Serie, Categoría.
+    *   *Specs Técnicas*: CPU, RAM, Almacenamiento, Detalles Adicionales.
+    *   *Financiero*: Fecha de Compra, Costo, Método de Depreciación.
 
-# 5. Gestión de Usuarios (Consulta)
+### 3.2. Ciclo de Vida y Acciones
+*   **Mover Activo**:
+    *   Modal para cambio de ubicación.
+    *   **Ubicaciones Restringidas**: Solo permite seleccionar de una lista cerrada (Nap del Caribe, Oficina de Santiago, Torre Bolivar Almacen, Torre Bolivar Piso 2, Torre Bolivar Piso 3).
+    *   *Impacto*: Actualiza `location_id` y crea registro en `location_history`.
+*   **Mantenimiento**:
+    *   Registro de eventos (Preventivo, Correctivo).
+    *   Campos: Tipo, Fecha, Costo, Realizado Por, Descripción.
+    *   *Impacto*: Opcionalmente cambia el estado del activo a "En Mantenimiento".
+*   **Baja/Retiro**:
+    *   Proceso formal de salida.
+    *   Campos: Fecha de Retiro, Razón, Valor de Recuperación.
+    *   *Impacto*: Cambia estado a `retired`, deshabilita ediciones futuras.
+
+### 3.3. Trazabilidad
+*   **Timeline de Ubicaciones**: Historial cronológico de dónde ha estado el activo.
+*   **Bitácora de Mantenimiento**: Lista de todos los servicios realizados con costos acumulados.
+*   **Código QR**: Generador SVG dinámico que enlaza a la verificación pública.
+
+# 4. Centro de Asignaciones
 
 *   **Estado**: ✅ Implementado
-*   **Uso**: Directorio de empleados y control de dotación tecnológica.
-*   **Funcionalidades**:
-    *   **Listado de Usuarios**: Búsqueda por nombre/email/departamento. Estadísticas de asignación.
-    *   **Detalle de Usuario**:
-        *   Perfil (Depto, Rol, Fecha Ingreso).
-        *   **Activos Actuales**: Lista de equipos en poder del usuario.
-        *   **Historial**: Registro histórico de equipos devueltos.
+*   **Ruta**: `/assignments`
+*   **Funcionalidad**: Control de flujo de entrega y recepción de equipos a empleados.
 
-# 6. Verificación Pública (QR)
+### 4.1. Modo Entrega (Check-out)
+*   **Regla**: Solo permite seleccionar activos con estado `stock`.
+*   **Proceso**:
+    1.  Seleccionar Usuario (Búsqueda predictiva).
+    2.  Seleccionar Activo (Búsqueda por Tag/Serie).
+    3.  Definir Condición de Entrega (Nuevo, Bueno, etc.).
+    4.  *Resultado*: Crea registro en `assignments` con `is_current=true`, cambia estado del activo a `assigned`.
+
+### 4.2. Modo Devolución (Check-in)
+*   **Regla**: Solo lista activos que actualmente están asignados (`is_current=true`).
+*   **Proceso**:
+    1.  Buscar por Usuario o Activo.
+    2.  Registrar Condición de Retorno (e.g., "Pantalla rayada").
+    3.  *Resultado*: Cierra la asignación (`returned_at`, `is_current=false`), libera el activo a estado `stock`.
+
+# 5. Directorio de Usuarios
 
 *   **Estado**: ✅ Implementado
-*   **Uso**: Acceso rápido a información del activo escaneando el código QR físico.
-*   **Seguridad**: Vista de solo lectura pública.
-*   **Contenido**:
-    *   Estado actual (Stock/Asignado).
-    *   Especificaciones básicas.
-    *   Línea de tiempo de asignaciones y mantenimientos (Auditoría).
+*   **Ruta**: `/users` y `/users/[id]`
+*   **Funcionalidad**: Visión centrada en el empleado de la dotación tecnológica.
+*   **Vistas**:
+    *   **Listado**: Búsqueda filtrable de empleados con indicadores de cuántos activos tienen en su poder.
+    *   **Perfil Individual**:
+        *   Datos del empleado (Departamento, Rol, Fecha Ingreso).
+        *   **Activos en Posesión**: Lista con acceso directo al detalle de cada equipo.
+        *   **Historial de Responsabilidad**: Registro histórico de equipos que tuvo asignados y ya devolvió.
+
+# 6. Verificación Pública
+
+*   **Estado**: ✅ Implementado
+*   **Ruta**: `/verify/[id]` (Accesible sin auth)
+*   **Uso**: Escaneo de QR físico por personal de seguridad o auditoría.
+*   **Datos Visibles**:
+    *   Estado actual (Stock vs Asignado).
+    *   Imagen y especificaciones básicas.
+    *   Cronología de Movimientos y Asignaciones (Trazabilidad).
 
 # 7. Ingesta y Migración de Datos
 
-*   **Estado**: ✅ Implementado
-*   **Usuarios**: Carga inicial desde listado de empleados (script Python).
-*   **Histórico**: Migración de activos y asignaciones históricas, mapeando estados y relaciones.
+*   **Scripts de Carga**:
+    *   `scripts/generate_users.py`: Procesa listados de RRHH para crear usuarios, generando correos electrónicos y normalizando departamentos.
+    *   `scripts/generate_historical_data.py`: Migra inventarios legacy (Excel/Txt), mapeando estados antiguos a los nuevos (`Asignada` -> `assigned`), creando activos y asignaciones históricas simultáneamente.
+    *   `scripts/seed-*.ts`: Ejecutores TypeScript para insertar los datos SQL generados de forma transaccional.
 
 ---
 
-# 8. Especificaciones Técnicas (Arquitectura)
+# 8. Arquitectura Técnica
 
-*   **Framework**: Next.js 15 (App Router).
-*   **Base de Datos**: Vercel Postgres (Neon).
-*   **Patrón de Datos**: **Raw SQL** (Sin ORM) para control total.
-*   **Estilos**: Tailwind CSS.
-*   **Mutaciones**: Server Actions para formularios y transacciones.
+*   **Frontend**: Next.js 16 (App Router, Turbopack) con React Server Components.
+*   **Estilizado**: Tailwind CSS 3.4.
+*   **Base de Datos**: PostgreSQL (Vercel/Neon).
+*   **Acceso a Datos**: **Raw SQL** (vía `@vercel/postgres`). No se utiliza ORM para garantizar control total sobre las consultas y optimización.
+*   **Mutaciones**: Server Actions (`'use server'`) para todo el manejo de formularios, garantizando seguridad y validación en el servidor sin exponer endpoints API innecesarios.
