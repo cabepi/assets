@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifySession } from './lib/auth';
 
-const protectedRoutes = ['/dashboard', '/inventory', '/assignments', '/users', '/reports'];
-const publicRoutes = ['/login', '/verify'];
+const protectedRoutes = ['/dashboard', '/inventory', '/assignments', '/users', '/reports', '/verify'];
+const publicRoutes = ['/login'];
 
 export default async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
@@ -16,7 +16,9 @@ export default async function middleware(req: NextRequest) {
 
     // 1. Redirect unauthenticated users to login
     if (isProtectedRoute && !session) {
-        return NextResponse.redirect(new URL('/login', req.nextUrl));
+        const redirectUrl = new URL('/login', req.nextUrl);
+        redirectUrl.searchParams.set('redirect', path);
+        return NextResponse.redirect(redirectUrl);
     }
 
     // 2. Redirect authenticated users away from login

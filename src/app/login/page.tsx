@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { sendLoginOTP, verifyLoginOTP } from '@/lib/auth-actions';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function LoginPage() {
     const [step, setStep] = useState<'email' | 'otp'>('email');
@@ -11,6 +11,8 @@ export default function LoginPage() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectPath = searchParams.get('redirect') || '/';
 
     async function handleEmailSubmit(formData: FormData) {
         setIsLoading(true);
@@ -38,7 +40,7 @@ export default function LoginPage() {
         if (result.error) {
             setError(result.error);
         } else {
-            router.push('/');
+            router.push(redirectPath);
         }
     }
 

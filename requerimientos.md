@@ -100,8 +100,11 @@ Este documento detalla todas las funcionalidades implementadas en el sistema de 
 # 6. Verificación Pública
 
 *   **Estado**: ✅ Implementado
-*   **Ruta**: `/verify/[id]` (Accesible sin auth)
-*   **Uso**: Escaneo de QR físico por personal de seguridad o auditoría.
+*   **Ruta**: `/verify/[id]`
+*   **Seguridad**: **Ruta Protegida**. Requiere autenticación activa.
+    *   *Comportamiento*: Si un usuario no autenticado intenta acceder, es redirigido automáticamente a `/login?redirect=/verify/[id]`.
+    *   *Flujo de Retorno*: Tras un inicio de sesión exitoso, el sistema detecta el parámetro `redirect` y devuelve al usuario a la pantalla de verificación original.
+*   **Uso**: Escaneo de QR físico por personal autorizado (Seguridad/Auditoría).
 *   **Datos Visibles**:
     *   Estado actual (Stock vs Asignado).
     *   Imagen y especificaciones básicas.
@@ -143,7 +146,7 @@ La pantalla de inicio de sesión (`/login`) está diseñada para ser minimalista
     *   **Interfaz**: Solicita código de 4 dígitos enviado al correo.
     *   **Seguridad**: El correo se muestra en modo solo lectura para confirmación.
     *   **Validación**: Verifica código vs BD y expiración (5 mins).
-    *   **Resultado**: Genera JWT via `jose`, setea cookie `session_token` y redirige al dashboard.
+    *   **Resultado**: Genera JWT via `jose`, setea cookie `session_token` y redirige al dashboard **o a la URL original si existe un parámetro `redirect`**.
 
 ### 9.2. Lógica Backend
 1.  **Generación**: `generateOTP()` crea un código numérico aleatorio.
