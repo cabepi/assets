@@ -1,4 +1,6 @@
 import { Header } from "@/components/layout/Header";
+
+export const dynamic = 'force-dynamic';
 import { getAssetsList, getCategories } from "@/lib/data";
 import { InventoryControls } from "@/components/features/assets/InventoryControls";
 import { InventoryTable } from "@/components/features/assets/InventoryTable";

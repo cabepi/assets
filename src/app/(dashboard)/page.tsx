@@ -1,6 +1,8 @@
 import { Header } from "@/components/layout/Header";
 import { getDashboardMetrics, getWarrantyAlerts, getDepreciationMetrics } from "@/lib/data";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const metrics = await getDashboardMetrics();
   const warrantyAlerts = await getWarrantyAlerts();

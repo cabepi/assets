@@ -1,4 +1,6 @@
 import { Header } from "@/components/layout/Header";
+
+export const dynamic = 'force-dynamic';
 import { getAssignmentsList, getUsers, getAssetsList } from "@/lib/data";
 import { AssignmentForm } from "@/components/features/assignments/AssignmentForm";
 
