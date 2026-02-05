@@ -291,6 +291,7 @@ export async function updateAsset(formData: FormData) {
             WHERE asset_tag = ${assetTag} AND asset_id != ${assetId}
         `;
         if (existing.rows.length > 0) {
+            await Logger.warning(`Attempted to use duplicate asset tag: ${assetTag}`, { assetId, existingId: existing.rows[0].asset_id });
             throw new Error(`La etiqueta "${assetTag}" ya existe en otro activo`);
         }
 

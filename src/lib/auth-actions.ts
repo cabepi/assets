@@ -4,6 +4,7 @@ import { sql } from "@vercel/postgres";
 import { generateOTP, sendOTPEmail, createSession } from "./auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Logger } from "./logger";
 
 export async function sendLoginOTP(formData: FormData) {
     const email = formData.get('email') as string;
@@ -19,6 +20,7 @@ export async function sendLoginOTP(formData: FormData) {
         `;
 
         if (userResult.rowCount === 0) {
+            await Logger.warning('Login attempt failed: User not found or inactive', { email });
             return { error: "Usuario no encontrado o inactivo." };
         }
 
@@ -63,6 +65,7 @@ export async function verifyLoginOTP(email: string, code: string) {
         `;
 
         if (result.rowCount === 0) {
+            await Logger.warning('Login OTP verification failed: Invalid or expired code', { email });
             return { error: "Código inválido o expirado." };
         }
 
