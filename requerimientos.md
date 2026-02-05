@@ -121,3 +121,43 @@ Este documento detalla todas las funcionalidades implementadas en el sistema de 
 *   **Base de Datos**: PostgreSQL (Vercel/Neon).
 *   **Acceso a Datos**: **Raw SQL** (vía `@vercel/postgres`). No se utiliza ORM para garantizar control total sobre las consultas y optimización.
 *   **Mutaciones**: Server Actions (`'use server'`) para todo el manejo de formularios, garantizando seguridad y validación en el servidor sin exponer endpoints API innecesarios.
+
+# 9. Autenticación y Seguridad
+
+*   **Estado**: ✅ Implementado
+*   **Mecanismo**: Login sin contraseña (Passwordless) basado en códigos OTP.
+*   **Protección**: `src/middleware.ts` intercepta rutas protegidas, redirigiendo a login si el token falta o es inválido.
+
+### 9.1. Flujo e Interfaz de Usuario (UI Login)
+La pantalla de inicio de sesión (`/login`) está diseñada para ser minimalista y segura, operando en dos pasos distintos:
+
+1.  **Paso 1: Identificación (Email)**
+    *   **Interfaz**: Muestra logo y campo de correo corporativo.
+    *   **Acción**: Valida via *Server Action* si el usuario existe y está activo.
+    *   **Feedback**: Muestra error si el usuario no existe.
+
+2.  **Paso 2: Verificación (OTP)**
+    *   **Interfaz**: Solicita código de 4 dígitos enviado al correo.
+    *   **Seguridad**: El correo se muestra en modo solo lectura para confirmación.
+    *   **Validación**: Verifica código vs BD y expiración (5 mins).
+    *   **Resultado**: Genera JWT via `jose`, setea cookie `session_token` y redirige al dashboard.
+
+### 9.2. Lógica Backend
+1.  **Generación**: `generateOTP()` crea un código numérico aleatorio.
+2.  **Almacenamiento**: Se guarda en `asset.otp_codes` con `expires_at = NOW() + 5 min`.
+3.  **Envío**: Se dispara el servicio de correo (ver Sec. 10).
+4.  **Verificación**: `verifyLoginOTP` consulta la tabla, valida expiración y marca `used=true`.
+
+# 10. Servicio de Notificaciones (Email)
+
+*   **Estado**: ✅ Implementado (API REST Personalizada)
+*   **Arquitectura**: Microservicio REST (`src/lib/email-service.ts`) reemplazando SDK de AWS.
+*   **Componente Técnico**:
+    *   **Autenticación**: Tokens Bearer con autorefresh (manejo de 401).
+    *   **Diseño**: Plantilla HTML responsiva embebida para códigos OTP.
+    *   **Endpoint**: Consume API externa configurada en variables de entorno.
+
+# 11. Gestión Avanzada de Usuarios
+
+*   **Clonación de Usuarios**:
+    *   Se implementó script temporal para clonar perfiles existentes, facilitando la creación de usuarios masivos con roles idénticos.
