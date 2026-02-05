@@ -1,11 +1,11 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { sendLoginOTP, verifyLoginOTP } from '@/lib/auth-actions';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
+function LoginForm() {
     const [step, setStep] = useState<'email' | 'otp'>('email');
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
@@ -147,5 +147,15 @@ export default function LoginPage() {
             {/* Background pattern */}
             <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"></div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>}>
+            <LoginForm />
+        </Suspense>
     );
 }
