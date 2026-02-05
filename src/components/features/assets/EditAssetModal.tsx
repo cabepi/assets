@@ -201,18 +201,31 @@ export function EditAssetModal({ asset, categories, onClose }: EditAssetModalPro
                                     className="w-full border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                 />
                             </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Valor Residual ($)</label>
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    name="salvageValue"
+                                    defaultValue={asset.salvageValue || 0}
+                                    placeholder="Valor al final de la vida útil"
+                                    className="w-full border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                />
+                            </div>
                             <div className="col-span-2">
                                 <label className="block text-sm font-medium text-slate-700 mb-1">Método de Depreciación</label>
                                 <select
                                     name="depreciationMethod"
-                                    defaultValue={asset.depreciationMethod || ''}
+                                    defaultValue={asset.depreciationMethod || 'STRAIGHT_LINE'}
                                     className="w-full border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                                 >
-                                    <option value="">Ninguno</option>
-                                    <option value="straight-line">Línea Recta</option>
-                                    <option value="declining-balance">Saldos Decrecientes</option>
-                                    <option value="sum-of-years">Suma de Años</option>
+                                    <option value="STRAIGHT_LINE">Línea Recta (Estándar)</option>
+                                    <option value="DOUBLE_DECLINING">Saldo Doble Decreciente (Acelerada)</option>
+                                    <option value="SUM_OF_DIGITS">Suma de Dígitos (Acelerada Suave)</option>
                                 </select>
+                                <p className="mt-1 text-xs text-slate-500">
+                                    Determina cómo se calcula la pérdida de valor en el tiempo.
+                                </p>
                             </div>
                         </div>
                     </section>

@@ -197,15 +197,59 @@ export function AssetDetailsView({ asset, qrValue, isPublic = false, actions, lo
                         </div>
 
                         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                            <h2 className="text-lg font-bold text-slate-900 mb-4">Datos Financieros</h2>
+                            <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                <span className="material-symbols-outlined text-green-600">attach_money</span>
+                                Datos Financieros
+                            </h2>
+
+                            <div className="mb-6 p-4 bg-emerald-50 rounded-lg border border-emerald-100 text-center">
+                                <span className="block text-xs uppercase font-bold text-emerald-600 mb-1">Valor en Libros Actual</span>
+                                <span className="block text-3xl font-black text-emerald-700">
+                                    ${asset.currentBookValue?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </span>
+                            </div>
+
                             <div className="space-y-4">
-                                <div className="flex justify-between items-center py-2 border-b border-slate-50">
+                                <div>
+                                    <div className="flex justify-between text-xs mb-1">
+                                        <span className="text-slate-500">Depreciación Acumulada</span>
+                                        <span className="font-bold text-slate-700">
+                                            {Math.round(((asset.purchasePrice - asset.currentBookValue) / (asset.purchasePrice - asset.salvageValue)) * 100) || 0}%
+                                        </span>
+                                    </div>
+                                    <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                                        <div
+                                            className="bg-primary h-2.5 rounded-full transition-all duration-500"
+                                            style={{ width: `${Math.min(100, Math.max(0, ((asset.purchasePrice - asset.currentBookValue) / (asset.purchasePrice - asset.salvageValue)) * 100))}%` }}
+                                        ></div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-x-2 gap-y-4 text-sm border-t border-slate-100 pt-4">
+                                    <div>
+                                        <span className="block text-slate-400 text-xs">Costo Original</span>
+                                        <span className="font-bold text-slate-900">${asset.purchasePrice?.toLocaleString()}</span>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="block text-slate-400 text-xs">Valor Residual</span>
+                                        <span className="font-medium text-slate-900">${asset.salvageValue?.toLocaleString()}</span>
+                                    </div>
+                                    <div>
+                                        <span className="block text-slate-400 text-xs">Tasa Mensual</span>
+                                        <span className="font-medium text-red-500">-${asset.monthlyDepreciation?.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="block text-slate-400 text-xs">Método</span>
+                                        <span className="font-medium text-slate-900 whitespace-nowrap overflow-hidden text-ellipsis">
+                                            {asset.depreciationMethod === 'DOUBLE_DECLINING' ? 'Doble Saldo' :
+                                                asset.depreciationMethod === 'SUM_OF_DIGITS' ? 'Suma Dígitos' : 'Línea Recta'}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-center py-2 border-t border-slate-50">
                                     <span className="text-slate-500 text-sm">Fecha Compra</span>
                                     <span className="font-medium">{asset.purchaseDate}</span>
-                                </div>
-                                <div className="flex justify-between items-center py-2 border-b border-slate-50">
-                                    <span className="text-slate-500 text-sm">Costo</span>
-                                    <span className="font-bold text-emerald-600">${asset.purchasePrice.toLocaleString()}</span>
                                 </div>
                             </div>
                         </div>

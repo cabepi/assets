@@ -11,6 +11,7 @@ const navItems = [
     { name: "Asignaciones", href: "/assignments", icon: "assignment_ind" },
     { name: "Usuarios", href: "/users", icon: "group" },
     { name: "Reportes", href: "/reports", icon: "description" },
+    { name: "Configuración", href: "/settings/categories", icon: "settings" },
 ];
 
 export function Sidebar() {

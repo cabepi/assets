@@ -14,6 +14,7 @@ export async function createAsset(formData: FormData) {
         categoryId: formData.get('categoryId') as string,
         purchaseDate: formData.get('purchaseDate') as string,
         purchasePrice: formData.get('purchasePrice') as string,
+        salvageValue: formData.get('salvageValue') as string,
         depreciationMethod: formData.get('depreciationMethod') as string,
         technicalSpecs: {
             cpu: formData.get('cpu') as string,
@@ -50,7 +51,9 @@ export async function createAsset(formData: FormData) {
             status, 
             technical_specs, 
             purchase_date, 
+            purchase_date, 
             purchase_price, 
+            salvage_value,
             depreciation_method
         ) VALUES (
             ${assetTag},
@@ -63,6 +66,7 @@ export async function createAsset(formData: FormData) {
             ${JSON.stringify(rawFormData.technicalSpecs)},
             ${rawFormData.purchaseDate}::date,
             ${Number(rawFormData.purchasePrice)},
+            ${Number(rawFormData.salvageValue) || 0},
             ${rawFormData.depreciationMethod}
         )
       `;
@@ -271,6 +275,7 @@ export async function updateAsset(formData: FormData) {
     const categoryId = formData.get('categoryId') as string;
     const purchaseDate = formData.get('purchaseDate') as string;
     const purchasePrice = formData.get('purchasePrice') as string;
+    const salvageValue = formData.get('salvageValue') as string;
     const depreciationMethod = formData.get('depreciationMethod') as string;
     const technicalSpecs = {
         cpu: formData.get('cpu') as string,
@@ -307,6 +312,7 @@ export async function updateAsset(formData: FormData) {
                 category_id = ${categoryId ? Number(categoryId) : null},
                 purchase_date = ${purchaseDate}::date,
                 purchase_price = ${Number(purchasePrice) || 0},
+                salvage_value = ${Number(salvageValue) || 0},
                 depreciation_method = ${depreciationMethod},
                 technical_specs = ${JSON.stringify(technicalSpecs)},
                 updated_at = CURRENT_TIMESTAMP
@@ -319,5 +325,31 @@ export async function updateAsset(formData: FormData) {
     }
 
     revalidatePath(`/inventory/${assetId}`);
+    revalidatePath('/inventory');
+}
+
+export async function updateCategory(formData: FormData) {
+    const categoryId = formData.get('categoryId') as string;
+    const years = formData.get('years') as string;
+
+    if (!categoryId || !years) {
+        throw new Error("ID de categoría y años son requeridos");
+    }
+
+    try {
+        await sql`
+            UPDATE asset.categories 
+            SET depreciation_years = ${Number(years)}
+            WHERE category_id = ${Number(categoryId)}
+        `;
+
+        await Logger.info(`Category updated via settings`, { categoryId, years });
+
+    } catch (error) {
+        console.error('Failed to update category:', error);
+        throw new Error('Failed to update category');
+    }
+
+    revalidatePath('/settings/categories');
     revalidatePath('/inventory');
 }

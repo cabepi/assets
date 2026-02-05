@@ -1,5 +1,6 @@
 import { sql } from "@vercel/postgres";
 import { formatDate } from "./utils";
+import { DepreciationCalculator } from "./depreciation";
 
 export async function getDashboardMetrics() {
     const totalAssetsPromise = sql`SELECT count(*) FROM asset.fixed_assets`;
@@ -106,8 +107,12 @@ export async function getAssignmentsList() {
 }
 
 export async function getCategories() {
-    const result = await sql`SELECT category_id, name FROM asset.categories ORDER BY name ASC`;
-    return result.rows.map(row => ({ id: row.category_id, name: row.name }));
+    const result = await sql`SELECT category_id, name, depreciation_years FROM asset.categories ORDER BY name ASC`;
+    return result.rows.map(row => ({
+        id: row.category_id,
+        name: row.name,
+        depreciationYears: row.depreciation_years || 3
+    }));
 }
 
 export async function getLocations() {
@@ -129,6 +134,8 @@ export async function getAssetById(id: string) {
       a.purchase_price,
       a.technical_specs,
       a.depreciation_method,
+      a.salvage_value,
+      c.depreciation_years,
       a.category_id,
       c.name as category_name,
       l.name as location_name,
@@ -159,6 +166,17 @@ export async function getAssetById(id: string) {
         ? new Date(row.purchase_date).toISOString().split('T')[0]
         : '';
 
+    // Calculate Depreciation
+    const financials = DepreciationCalculator.calculate(
+        row.depreciation_method,
+        {
+            purchasePrice: Number(row.purchase_price),
+            purchaseDate: new Date(row.purchase_date),
+            salvageValue: Number(row.salvage_value || 0),
+            usefulLifeYears: row.depreciation_years || 3 // Default if category not properly set
+        }
+    );
+
     return {
         id: row.asset_id,
         assetTag: row.asset_tag,
@@ -170,6 +188,10 @@ export async function getAssetById(id: string) {
         purchaseDate: formatDate(row.purchase_date),
         purchaseDateRaw,
         purchasePrice: Number(row.purchase_price),
+        salvageValue: Number(row.salvage_value || 0),
+        currentBookValue: financials.currentBookValue,
+        monthlyDepreciation: financials.monthlyRate,
+        isFullyDepreciated: financials.isFullyDepreciated,
         depreciationMethod: row.depreciation_method,
         specs: row.technical_specs, // JSONB
         category: {
@@ -313,12 +335,12 @@ export async function getWarrantyAlerts() {
 }
 
 export async function getDepreciationMetrics() {
-    // Fetch assets with necessary data for calculation
-    // Assuming Straight Line depreciation based on category years
     const assetsResult = await sql`
         SELECT 
             a.purchase_price,
             a.purchase_date,
+            a.salvage_value,
+            a.depreciation_method,
             COALESCE(c.depreciation_years, 3) as useful_life_years
         FROM asset.fixed_assets a
         LEFT JOIN asset.categories c ON a.category_id = c.category_id
@@ -328,31 +350,24 @@ export async function getDepreciationMetrics() {
     let totalMonthlyDepreciation = 0;
     let currentTotalBookValue = 0;
 
-    const now = new Date();
-
     assetsResult.rows.forEach(asset => {
-        const price = Number(asset.purchase_price);
-        const usefulLifeMonths = asset.useful_life_years * 12;
-        const monthlyDepr = price / usefulLifeMonths;
-        const purchaseDate = new Date(asset.purchase_date);
+        const result = DepreciationCalculator.calculate(
+            asset.depreciation_method,
+            {
+                purchasePrice: Number(asset.purchase_price),
+                purchaseDate: new Date(asset.purchase_date),
+                salvageValue: Number(asset.salvage_value || 0),
+                usefulLifeYears: asset.useful_life_years
+            }
+        );
 
-        // Calculate age in months
-        const ageInMilliseconds = now.getTime() - purchaseDate.getTime();
-        const ageInMonths = ageInMilliseconds / (1000 * 60 * 60 * 24 * 30.44);
-
-        // Current Book Value (cannot be less than 0)
-        const depreciationAmount = monthlyDepr * ageInMonths;
-        const bookValue = Math.max(0, price - depreciationAmount);
-
-        currentTotalBookValue += bookValue;
-
-        // If asset is still depreciating, add to fleet monthly depreciation
-        if (bookValue > 0) {
-            totalMonthlyDepreciation += monthlyDepr;
-        }
+        currentTotalBookValue += result.currentBookValue;
+        totalMonthlyDepreciation += result.monthlyRate;
     });
 
-    // Project next 6 points (every 2 months for the chart labels)
+    // Simple projection assuming linear future depreciation for the chart visualization
+    // (Doing complex future projection for mixed methods is heavy for a dashboard widget, 
+    // so we assume the current collective rate holds for the short term view)
     const projection = [];
     for (let i = 0; i <= 6; i++) {
         projection.push(Math.max(0, currentTotalBookValue - (totalMonthlyDepreciation * (i * 2))));
@@ -361,7 +376,7 @@ export async function getDepreciationMetrics() {
     return {
         currentBookValue: currentTotalBookValue,
         monthlyRate: totalMonthlyDepreciation,
-        projection // Array of values for the chart
+        projection
     };
 }
 

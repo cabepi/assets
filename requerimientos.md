@@ -167,3 +167,38 @@ La pantalla de inicio de sesión (`/login`) está diseñada para ser minimalista
 
 *   **Clonación de Usuarios**:
     *   Se implementó script temporal para clonar perfiles existentes, facilitando la creación de usuarios masivos con roles idénticos.
+
+# 12. Fórmulas y Cálculos Financieros
+
+El sistema integra un motor financiero robusto (`DepreciationCalculator`) que permite asignar diferentes estrategias de depreciación por activo.
+
+### 12.1. Métodos de Depreciación
+
+#### A. Línea Recta (Straight Line)
+Método estándar y por defecto. Asume un desgaste constante en el tiempo.
+*   **Fórmula**: `(Costo - Valor Residual) / Vida Útil (meses)`
+*   **Depreciación Mensual**: Constante.
+*   **Uso**: Equipos de oficina, Muebles, Activos genéricos.
+
+#### B. Saldo Doble Decreciente (Double Declining Balance)
+Método acelerado que deprecia más valor en los primeros años. Ideal para tecnología que pierde valor rápidamente.
+*   **Tasa Base**: `(1 / Vida Útil (años)) * 2`
+*   **Cálculo Anual**: `Valor en Libros al inicio del año * Tasa Base`
+*   **Ajuste Mensual**: El cálculo anual se distribuye en el año fiscal.
+*   **Nota**: Nunca deprecia por debajo del Valor Residual.
+
+#### C. Suma de Dígitos (Sum of Years' Digits)
+Método acelerado pero más suave que el Doble Saldo.
+*   **Factor SYD**: Suma de los años de vida útil (ej.para 3 años: 1+2+3 = 6).
+*   **Vida Restante**: Años que le quedan al activo.
+*   **Fórmula Anual**: `((Vida Restante / Factor SYD) * (Costo - Valor Residual))`
+
+### 12.2. Variables Clave
+*   **Costo de Adquisición**: Valor original de compra (`purchase_price`).
+*   **Valor Residual (Salvage Value)**: Estimación del valor del activo al final de su vida útil. El sistema no permite depreciar por debajo de este monto.
+*   **Valor en Libros (Book Value)**: `Costo - Depreciación Acumulada`. Representa el valor neto actual del activo.
+*   **Vida Útil**: Definida por la **Categoría** del activo (ej. Laptops = 3 años, Muebles = 10 años). Configurable desde `/settings/categories`.
+
+# 13. Configuración y Clasificación
+*   **Gestión de Categorías**: Interfaz centralizada para definir nombres y vida útil (`depreciation_years`) de grupos de activos.
+*   **Motor de Clasificación Masiva**: Scripts automatizados (`scripts/classify-*.ts`) para organizar el inventario basado en patrones de nombres/modelos (ej. asignar automáticamente todos los "iPhone" a la categoría "Teléfonos").
