@@ -119,3 +119,21 @@ CREATE TABLE IF NOT EXISTS asset.otp_codes (
 );
 
 CREATE INDEX IF NOT EXISTS idx_otp_email ON asset.otp_codes(email);
+
+-- 8. LOGS DEL SISTEMA (Centralized Error Logging)
+CREATE TABLE IF NOT EXISTS asset.app_logs (
+    id BIGSERIAL PRIMARY KEY,
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    level VARCHAR(10) NOT NULL CHECK (level IN ('INFO', 'WARNING', 'ERROR', 'CRITICAL')),
+    service_name VARCHAR(50) DEFAULT 'asset-track-web',
+    error_code VARCHAR(50),
+    message TEXT NOT NULL,
+    stack_trace TEXT,
+    metadata JSONB DEFAULT '{}'::jsonb,
+    request_url TEXT,
+    http_method VARCHAR(10)
+);
+
+CREATE INDEX IF NOT EXISTS idx_logs_timestamp ON asset.app_logs (timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_logs_level ON asset.app_logs (level);
+CREATE INDEX IF NOT EXISTS idx_logs_error_code ON asset.app_logs (error_code);

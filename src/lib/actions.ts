@@ -3,6 +3,7 @@
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Logger } from "./logger";
 
 export async function createAsset(formData: FormData) {
     const rawFormData = {
@@ -67,9 +68,11 @@ export async function createAsset(formData: FormData) {
       `;
 
         console.log(`Asset created: ${assetTag}`);
+        await Logger.info(`Asset created: ${assetTag}`, { assetTag, name: rawFormData.name });
 
     } catch (error) {
         console.error('Failed to create asset:', error);
+        await Logger.error('Failed to create asset', error, { formData: rawFormData });
         throw new Error('Failed to create asset');
     }
 

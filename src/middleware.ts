@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifySession } from './lib/auth';
+import { Logger } from './lib/logger';
 
 const protectedRoutes = ['/dashboard', '/inventory', '/assignments', '/users', '/reports', '/verify'];
 const publicRoutes = ['/login'];
@@ -18,6 +19,17 @@ export default async function middleware(req: NextRequest) {
     if (isProtectedRoute && !session) {
         const redirectUrl = new URL('/login', req.nextUrl);
         redirectUrl.searchParams.set('redirect', path);
+
+        // Log unauthorized attempt (non-blocking)
+        // We use waitUntil if available to not block the response, or just fire and forget if runtime permits
+        // For simplicity in this demo, just call it (Node runtime behavior) or wrap in safe block
+        try {
+            const ip = req.headers.get('x-forwarded-for') || 'unknown';
+            Logger.warning(`Unauthorized access attempt to ${path}`, { ip, userAgent: req.headers.get('user-agent') });
+        } catch (e) {
+            console.error('Logger failed in middleware', e);
+        }
+
         return NextResponse.redirect(redirectUrl);
     }
 
