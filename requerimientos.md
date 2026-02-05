@@ -36,8 +36,9 @@ Este documento detalla todas las funcionalidades implementadas en el sistema de 
 
 ### 3.1. Edición de Datos
 *   **Mecanismo**: Modal con formulario controlado (`EditAssetModal`).
-*   **Validaciones**:
-    *   **Unicidad**: El sistema valida en tiempo real (Server Action) que la `Etiqueta/Tag` no esté asignada a otro activo activo.
+*   **Reglas de Negocio**:
+    *   **Generación de Etiqueta (Auto-Tag)**: Al crear un activo, si no se especifica, el sistema genera automáticamente el tag con formato `AST-{AÑO}-{SECUENCIAL}` (ej. `AST-2024-0042`) basado en el conteo total de activos.
+    *   **Validación de Unicidad**: El sistema previene duplicados de `asset_tag` en tiempo real; si se intenta asignar un tag existente a otro activo, el Server Action lanza un error explícito.
 *   **Secciones Editables**:
     *   *Información General*: Etiqueta, Nombre, Marca, Modelo, Serie, Categoría.
     *   *Specs Técnicas*: CPU, RAM, Almacenamiento, Detalles Adicionales.
@@ -46,12 +47,12 @@ Este documento detalla todas las funcionalidades implementadas en el sistema de 
 ### 3.2. Ciclo de Vida y Acciones
 *   **Mover Activo**:
     *   Modal para cambio de ubicación.
-    *   **Ubicaciones Restringidas**: Solo permite seleccionar de una lista cerrada (Nap del Caribe, Oficina de Santiago, Torre Bolivar Almacen, Torre Bolivar Piso 2, Torre Bolivar Piso 3).
-    *   *Impacto*: Actualiza `location_id` y crea registro en `location_history`.
+    *   **Ubicaciones Restringidas**: Solo permite seleccionar de una lista cerrada (Nap del Caribe, Oficina de Santiago, Torre Bolivar Almacen, Torre Bolivar Piso 2, Torre Bolivar Piso 3, Torre Bolivar Piso 8).
+    *   *Impacto*: Actualiza `location_id` y crea registro en `location_history` con `previous_location_id` para trazabilidad completa.
 *   **Mantenimiento**:
     *   Registro de eventos (Preventivo, Correctivo).
-    *   Campos: Tipo, Fecha, Costo, Realizado Por, Descripción.
     *   *Impacto*: Opcionalmente cambia el estado del activo a "En Mantenimiento".
+    *   **Reincorporación (Recover)**: Acción explícita para sacar un activo de mantenimiento y devolverlo a estado `stock`.
 *   **Baja/Retiro**:
     *   Proceso formal de salida.
     *   Campos: Fecha de Retiro, Razón, Valor de Recuperación.
@@ -81,7 +82,8 @@ Este documento detalla todas las funcionalidades implementadas en el sistema de 
 *   **Proceso**:
     1.  Buscar por Usuario o Activo.
     2.  Registrar Condición de Retorno (e.g., "Pantalla rayada").
-    3.  *Resultado*: Cierra la asignación (`returned_at`, `is_current=false`), libera el activo a estado `stock`.
+    3.  *Resultado*: Cierra la asignación (`returned_at`, `is_current=false`) y libera el activo **siempre a estado `stock`**.
+        *   *Nota*: Si el activo retorna en mal estado, el gestor debe moverlo manualmente a "Mantenimiento" (ver Sec. 3.2).
 
 # 5. Directorio de Usuarios
 
@@ -119,6 +121,7 @@ Este documento detalla todas las funcionalidades implementadas en el sistema de 
 *   **Frontend**: Next.js 16 (App Router, Turbopack) con React Server Components.
 *   **Estilizado**: Tailwind CSS 3.4.
 *   **Base de Datos**: PostgreSQL (Vercel/Neon).
+    *   **Esquema Híbrido**: Uso de columnas relacionales estandarizadas combinadas con campos `JSONB` (`technical_specs`) para flexibilidad en especificaciones de hardware variables.
 *   **Acceso a Datos**: **Raw SQL** (vía `@vercel/postgres`). No se utiliza ORM para garantizar control total sobre las consultas y optimización.
 *   **Mutaciones**: Server Actions (`'use server'`) para todo el manejo de formularios, garantizando seguridad y validación en el servidor sin exponer endpoints API innecesarios.
 
