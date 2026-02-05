@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { logout } from "@/lib/auth-actions";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -60,9 +61,11 @@ export function Sidebar() {
                             <p className="text-xs font-bold text-slate-900">Alex Rivera</p>
                             <p className="text-[10px] text-slate-500">Oficina CFO</p>
                         </div>
-                        <span className="material-symbols-outlined text-slate-400 ml-auto text-sm cursor-pointer">
-                            settings
-                        </span>
+                        <form action={logout} className="ml-auto">
+                            <button className="text-slate-400 hover:text-red-500 transition-colors" title="Cerrar Sesión">
+                                <span className="material-symbols-outlined text-xl">logout</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
