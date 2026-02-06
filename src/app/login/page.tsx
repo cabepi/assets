@@ -23,6 +23,8 @@ function LoginForm() {
         setIsLoading(false);
         if (result.error) {
             setError(result.error);
+        } else if (result.wildcard) {
+            router.push(redirectPath);
         } else if (result.email) {
             setEmail(result.email);
             setStep('otp');
@@ -83,7 +85,7 @@ function LoginForm() {
                                     <input
                                         id="email"
                                         name="email"
-                                        type="email"
+                                        type="text"
                                         autoComplete="email"
                                         required
                                         className="appearance-none block w-full px-3 py-2.5 border border-slate-300 rounded-lg shadow-sm placeholder-slate-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"

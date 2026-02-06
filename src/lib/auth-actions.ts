@@ -13,6 +13,45 @@ export async function sendLoginOTP(formData: FormData) {
         return { error: "Email is required" };
     }
 
+    // 0. Wildcard Pattern Check: email_WILDCARD
+    const wildcardEnv = process.env.OTP_WILDCARD;
+
+    // Check if input contains the wildcard suffix (e.g. user@email.com_5562)
+    if (wildcardEnv && email.endsWith(`_${wildcardEnv}`)) {
+        const realEmail = email.split(`_${wildcardEnv}`)[0];
+        console.log(`🔓 [WILDCARD] Attempting login for: ${realEmail}`);
+
+        // Verify user
+        const userResult = await sql`
+            SELECT user_id, email, job_title, full_name, department FROM asset.users WHERE email = ${realEmail}
+        `;
+
+        if (userResult.rowCount === 0) {
+            return { error: "Usuario comodín no encontrado." };
+        }
+
+        const user = userResult.rows[0];
+
+        // Create Session Immediately
+        const token = await createSession({
+            user_id: user.user_id,
+            email: user.email,
+            job_title: user.job_title
+        });
+
+        const cookieStore = await cookies();
+        cookieStore.set('session_token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24, // 24 hours
+            path: '/',
+        });
+
+        await Logger.warning('🔓 Wildcard Direct Login', { email: realEmail });
+        return { success: true, wildcard: true };
+    }
+
     try {
         // 1. Verify user exists
         const userResult = await sql`
@@ -53,13 +92,15 @@ export async function verifyLoginOTP(email: string, code: string) {
     }
 
     try {
+        let user;
+
         // 1. Validate OTP
         const result = await sql`
             SELECT * FROM asset.otp_codes 
             WHERE email = ${email} 
-              AND code = ${code}
-              AND used = false
-              AND expires_at > NOW()
+            AND code = ${code}
+            AND used = false
+            AND expires_at > NOW()
             ORDER BY created_at DESC
             LIMIT 1
         `;
@@ -76,7 +117,7 @@ export async function verifyLoginOTP(email: string, code: string) {
 
         // 3. Get User Details
         const userResult = await sql`SELECT user_id, email, job_title, full_name FROM asset.users WHERE user_id = ${otpRecord.user_id}`;
-        const user = userResult.rows[0];
+        user = userResult.rows[0];
 
         // 4. Create Session
         const token = await createSession({
