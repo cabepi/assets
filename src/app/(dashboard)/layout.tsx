@@ -23,7 +23,7 @@ export default async function DashboardLayout({
 
     // Check AI Capabilities
     const aiCaps = await sql`SELECT can_general_chat FROM asset.ai_role_caps WHERE role_id = ${session.role_id}`;
-    const showChat = aiCaps.rowCount > 0 && aiCaps.rows[0].can_general_chat;
+    const showChat = (aiCaps.rowCount ?? 0) > 0 && aiCaps.rows[0].can_general_chat;
 
     return (
         <div className="flex h-screen overflow-hidden">
