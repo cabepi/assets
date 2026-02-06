@@ -1,20 +1,19 @@
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { sql } from "@vercel/postgres";
+import { db } from "@vercel/postgres";
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 // Tool Definition
-// Tool Definition for the Model
 export const searchToolDeclaration = {
     name: "queryDatabase",
     parameters: {
-        type: "OBJECT",
+        type: "OBJECT", // Use string literal "OBJECT"
         description: "Execute a READ-ONLY SQL query against the 'asset' schema to answer user questions about data.",
         properties: {
             query: {
-                type: "STRING",
+                type: "STRING", // Use string literal "STRING"
                 description: "The SQL SELECT query to execute. Must use 'asset.' schema prefix (e.g. asset.users).",
             },
         },
@@ -35,22 +34,23 @@ export const functions = {
             return { error: "Security Alert: Modification or destructive commands are blocked." };
         }
 
+        let client;
         try {
-            // Unsafe query execution (Parameterization is hard with dynamic SQL, but read-only pg user is best practice. 
-            // Here we rely on Regex + Logic).
-            const result = await sql.query(query); // Warning: SQL Injection risk if input not sanitized, but this is Internal AI.
-            // Limiting results
+            client = await db.connect();
+            const result = await client.query(query); // Execute raw query string
             return { result: result.rows.slice(0, 10) };
         } catch (error: any) {
-            return { error: error.message };
+            console.error("SQL Tool Error:", error);
+            return { error: `Database Error: ${error.message}` };
+        } finally {
+            if (client) client.release();
         }
     }
 };
 
-
 export async function getGeminiModel(systemInstruction: string) {
     const model = genAI.getGenerativeModel({
-        model: "gemini-pro",
+        model: "gemini-2.5-flash-preview-09-2025",
         systemInstruction: {
             parts: [{ text: systemInstruction }],
             role: "system"
