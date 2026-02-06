@@ -6,6 +6,10 @@ import { InventoryControls } from "@/components/features/assets/InventoryControl
 import { InventoryTable } from "@/components/features/assets/InventoryTable";
 import Link from "next/link";
 
+import { cookies } from "next/headers";
+import { verifySession } from "@/lib/auth";
+import { getUserPermissions } from "@/lib/rbac";
+
 export default async function InventoryPage({
     searchParams,
 }: {
@@ -15,6 +19,14 @@ export default async function InventoryPage({
         categoryId?: string;
     }>;
 }) {
+    // RBAC Check
+    const cookieStore = await cookies();
+    const token = cookieStore.get('session_token')?.value;
+    const session = token ? await verifySession(token) : null;
+    const permissions = session ? await getUserPermissions(session.user_id) : [];
+
+    const canCreate = permissions.includes('*') || permissions.includes('asset_create');
+
     const params = await searchParams;
     const assets = await getAssetsList({
         query: params?.query,
@@ -36,12 +48,14 @@ export default async function InventoryPage({
                             Gestione y rastree los activos tecnológicos de la empresa con trazabilidad total.
                         </p>
                     </div>
-                    <div className="flex gap-4">
-                        <Link href="/asset-registration" className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-5 rounded-lg shadow-md hover:shadow-lg transition-all">
-                            <span className="material-symbols-outlined">add</span>
-                            Nuevo Activo
-                        </Link>
-                    </div>
+                    {canCreate && (
+                        <div className="flex gap-4">
+                            <Link href="/asset-registration" className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-2.5 px-5 rounded-lg shadow-md hover:shadow-lg transition-all">
+                                <span className="material-symbols-outlined">add</span>
+                                Nuevo Activo
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
                 <InventoryControls categories={categories} />

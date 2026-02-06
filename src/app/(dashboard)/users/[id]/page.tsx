@@ -60,8 +60,8 @@ export default async function UserDetailsPage({ params }: { params: Promise<{ id
                             <p className="text-base font-bold text-slate-900">{user.department || 'Sin asignar'}</p>
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-slate-500">Rol</p>
-                            <p className="text-base font-bold text-slate-900">{user.role || 'Sin rol'}</p>
+                            <p className="text-sm font-medium text-slate-500">Cargo</p>
+                            <p className="text-base font-bold text-slate-900">{user.jobTitle || 'Sin cargo'}</p>
                         </div>
                         <div>
                             <p className="text-sm font-medium text-slate-500">Fecha Registro</p>

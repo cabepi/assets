@@ -3,9 +3,26 @@
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { Logger } from "./logger";
+import { verifySession } from "./auth";
+import { verifyPermission, PERMISSIONS } from "./rbac";
+
+// Helper to get current user securely
+async function getCurrentUser() {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('session_token')?.value;
+    if (!token) return null;
+    return await verifySession(token);
+}
 
 export async function createAsset(formData: FormData) {
+    // RBAC Check
+    const user = await getCurrentUser();
+    if (!user || !await verifyPermission(user.user_id, PERMISSIONS.ASSET.CREATE)) {
+        throw new Error("Acceso Denegado: No tienes permiso para crear activos.");
+    }
+
     const rawFormData = {
         name: formData.get('name') as string,
         brand: formData.get('brand') as string,
@@ -51,7 +68,6 @@ export async function createAsset(formData: FormData) {
             status, 
             technical_specs, 
             purchase_date, 
-            purchase_date, 
             purchase_price, 
             salvage_value,
             depreciation_method
@@ -72,7 +88,7 @@ export async function createAsset(formData: FormData) {
       `;
 
         console.log(`Asset created: ${assetTag}`);
-        await Logger.info(`Asset created: ${assetTag}`, { assetTag, name: rawFormData.name });
+        await Logger.info(`Asset created: ${assetTag}`, { assetTag, name: rawFormData.name, userId: user.user_id });
 
     } catch (error) {
         console.error('Failed to create asset:', error);
@@ -86,6 +102,11 @@ export async function createAsset(formData: FormData) {
 }
 
 export async function assignAsset(formData: FormData) {
+    const user = await getCurrentUser();
+    if (!user || !await verifyPermission(user.user_id, PERMISSIONS.OPS.ASSIGN)) {
+        throw new Error("Acceso Denegado: No tienes permiso para asignar activos.");
+    }
+
     const assetId = formData.get('assetId') as string;
     const userId = formData.get('userId') as string;
     const condition = formData.get('condition') as string;
@@ -122,6 +143,12 @@ export async function assignAsset(formData: FormData) {
 }
 
 export async function returnAsset(formData: FormData) {
+    // Considering return as part of assignment/ops logic
+    const user = await getCurrentUser();
+    if (!user || !await verifyPermission(user.user_id, PERMISSIONS.OPS.ASSIGN)) {
+        throw new Error("Acceso Denegado: No tienes permiso para recibir activos.");
+    }
+
     const assetId = formData.get('assetId') as string;
     const returnDate = formData.get('date') as string;
     const condition = formData.get('condition') as string;
@@ -156,6 +183,12 @@ export async function returnAsset(formData: FormData) {
 }
 
 export async function updateAssetLocation(formData: FormData) {
+    // Location update is arguably editing asset or ops. Let's say EDIT.
+    const user = await getCurrentUser();
+    if (!user || !await verifyPermission(user.user_id, PERMISSIONS.ASSET.EDIT)) {
+        throw new Error("Acceso Denegado.");
+    }
+
     const assetId = formData.get('assetId') as string;
     const newLocationId = formData.get('locationId') as string;
     const notes = formData.get('notes') as string;
@@ -187,6 +220,14 @@ export async function updateAssetLocation(formData: FormData) {
 }
 
 export async function logMaintenance(formData: FormData) {
+    // Maintenance is usually technical support (Soporte)
+    const user = await getCurrentUser();
+    // Assuming 'asset_edit' covers maintenance logging for now, or add specific permission if needed.
+    // Soporte has 'asset_edit'.
+    if (!user || !await verifyPermission(user.user_id, PERMISSIONS.ASSET.EDIT)) {
+        throw new Error("Acceso Denegado.");
+    }
+
     const assetId = formData.get('assetId') as string;
     const type = formData.get('type') as string;
     const date = formData.get('date') as string;
@@ -223,6 +264,11 @@ export async function logMaintenance(formData: FormData) {
 }
 
 export async function recoverAsset(formData: FormData) {
+    const user = await getCurrentUser();
+    if (!user || !await verifyPermission(user.user_id, PERMISSIONS.ASSET.EDIT)) {
+        throw new Error("Acceso Denegado.");
+    }
+
     const assetId = formData.get('assetId') as string;
 
     try {
@@ -241,6 +287,12 @@ export async function recoverAsset(formData: FormData) {
 }
 
 export async function retireAsset(formData: FormData) {
+    const user = await getCurrentUser();
+    // Retirement is a form of deletion/archiving.
+    if (!user || !await verifyPermission(user.user_id, PERMISSIONS.ASSET.DELETE)) {
+        throw new Error("Acceso Denegado: Solo administradores pueden retirar activos.");
+    }
+
     const assetId = formData.get('assetId') as string;
     const reason = formData.get('reason') as string;
     const date = formData.get('date') as string;
@@ -266,6 +318,11 @@ export async function retireAsset(formData: FormData) {
 }
 
 export async function updateAsset(formData: FormData) {
+    const user = await getCurrentUser();
+    if (!user || !await verifyPermission(user.user_id, PERMISSIONS.ASSET.EDIT)) {
+        throw new Error("Acceso Denegado.");
+    }
+
     const assetId = formData.get('assetId') as string;
     const assetTag = formData.get('assetTag') as string;
     const name = formData.get('name') as string;
@@ -329,6 +386,13 @@ export async function updateAsset(formData: FormData) {
 }
 
 export async function updateCategory(formData: FormData) {
+    // Configuration settings - Finance or Admin only?
+    // Let's assume Finance can edit valuation (which categories affect).
+    const user = await getCurrentUser();
+    if (!user || !await verifyPermission(user.user_id, PERMISSIONS.FINANCE.EDIT_VALUATION)) {
+        throw new Error("Acceso Denegado: Configuración financiera.");
+    }
+
     const categoryId = formData.get('categoryId') as string;
     const years = formData.get('years') as string;
 
@@ -343,7 +407,7 @@ export async function updateCategory(formData: FormData) {
             WHERE category_id = ${Number(categoryId)}
         `;
 
-        await Logger.info(`Category updated via settings`, { categoryId, years });
+        await Logger.info(`Category updated via settings`, { categoryId, years, userId: user.user_id });
 
     } catch (error) {
         console.error('Failed to update category:', error);

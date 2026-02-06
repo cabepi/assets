@@ -202,3 +202,32 @@ Método acelerado pero más suave que el Doble Saldo.
 # 13. Configuración y Clasificación
 *   **Gestión de Categorías**: Interfaz centralizada para definir nombres y vida útil (`depreciation_years`) de grupos de activos.
 *   **Motor de Clasificación Masiva**: Scripts automatizados (`scripts/classify-*.ts`) para organizar el inventario basado en patrones de nombres/modelos (ej. asignar automáticamente todos los "iPhone" a la categoría "Teléfonos").
+
+# 14. Control de Acceso y Seguridad (RBAC)
+
+El sistema implementa un modelo de seguridad basado en roles (RBAC) con una granularidad de permisos detallada para evitar limitaciones de roles estáticos.
+
+### 14.1 Arquitectura de Datos
+El modelo de seguridad se basa en tres entidades relacionales:
+*   **Roles (`asset.roles`)**: Definiciones de alto nivel (Ej. Admin, Finanzas, Técnico).
+*   **Permisos (`asset.permissions`)**: Códigos únicos de acción (Ej. `asset_create`, `view_depreciation`).
+*   **Matriz (`asset.role_permissions`)**: Tabla intermedia que asigna qué permisos tiene cada rol.
+*   **Asignación**: Los usuarios (`asset.users`) ahora tienen una llave foránea `role_id` apuntando a su rol.
+
+### 14.2 Matriz de Permisos (Referencia)
+
+| Módulo      | Permiso (`code`)    | Admin | Soporte | Finanzas | Operativo |
+| :---        | :---                | :---: | :---:   | :---:    | :---:     |
+| **Activos** | `asset_view`        | ✅    | ✅      | ✅       | ✅        |
+|             | `asset_create`      | ✅    | ✅      | ❌       | ❌        |
+|             | `asset_edit`        | ✅    | ✅      | ❌       | ❌        |
+|             | `asset_delete`      | ✅    | ❌      | ❌       | ❌        |
+| **Finanzas**| `view_depreciation` | ✅    | ❌      | ✅       | ❌        |
+|             | `edit_valuation`    | ✅    | ❌      | ✅       | ❌        |
+| **Ops**     | `assign_asset`      | ✅    | ✅      | ❌       | ❌        |
+|             | `generate_qr`       | ✅    | ✅      | ❌       | ❌        |
+
+### 14.3 Flujo de Verificación
+1.  **Backend**: Cada Server Action crítica verifica permisos mediante `verifyPermission(userId, code)`.
+2.  **Frontend**: La UI se adapta (oculta botones/menús) según los permisos devueltos en la sesión.
+

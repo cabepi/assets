@@ -219,7 +219,7 @@ export async function getUsersList(search?: string) {
             u.full_name,
             u.email,
             u.department,
-            u.role,
+            u.job_title,
             u.is_active,
             COUNT(asm.assignment_id) FILTER (WHERE asm.is_current = true) as active_assignments
         FROM asset.users u
@@ -234,7 +234,7 @@ export async function getUsersList(search?: string) {
         name: row.full_name,
         email: row.email,
         department: row.department,
-        role: row.role,
+        jobTitle: row.job_title,
         isActive: row.is_active,
         activeAssignments: Number(row.active_assignments)
     }));
@@ -247,7 +247,7 @@ export async function getUserById(id: string) {
             u.full_name,
             u.email,
             u.department,
-            u.role,
+            u.job_title,
             u.is_active,
             u.created_at
         FROM asset.users u
@@ -262,7 +262,7 @@ export async function getUserById(id: string) {
         name: row.full_name,
         email: row.email,
         department: row.department,
-        role: row.role,
+        jobTitle: row.job_title,
         isActive: row.is_active,
         createdAt: formatDate(row.created_at)
     };

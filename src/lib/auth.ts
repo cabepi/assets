@@ -8,7 +8,7 @@ const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'secret');
 export interface AuthSession {
     user_id: number;
     email: string;
-    role: string;
+    job_title: string;
 }
 
 // --- OTP Logic ---

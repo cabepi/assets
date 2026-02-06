@@ -81,7 +81,7 @@ export default async function UsersPage({
                                     <td className="p-4 text-sm text-slate-600">{user.department || '—'}</td>
                                     <td className="p-4">
                                         <span className="px-2 py-1 bg-slate-100 rounded text-xs font-medium text-slate-700">
-                                            {user.role || 'Sin rol'}
+                                            {user.jobTitle || 'Sin cargo'}
                                         </span>
                                     </td>
                                     <td className="p-4 text-center">

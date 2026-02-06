@@ -16,7 +16,7 @@ export async function sendLoginOTP(formData: FormData) {
     try {
         // 1. Verify user exists
         const userResult = await sql`
-            SELECT user_id, email, role, full_name, department FROM asset.users WHERE email = ${email} AND is_active = true
+            SELECT user_id, email, job_title, full_name, department FROM asset.users WHERE email = ${email} AND is_active = true
         `;
 
         if (userResult.rowCount === 0) {
@@ -74,15 +74,15 @@ export async function verifyLoginOTP(email: string, code: string) {
         // 2. Mark as used
         await sql`UPDATE asset.otp_codes SET used = true WHERE id = ${otpRecord.id}`;
 
-        // 3. Get User Details (Again, to be safe)
-        const userResult = await sql`SELECT user_id, email, role, full_name FROM asset.users WHERE user_id = ${otpRecord.user_id}`;
+        // 3. Get User Details
+        const userResult = await sql`SELECT user_id, email, job_title, full_name FROM asset.users WHERE user_id = ${otpRecord.user_id}`;
         const user = userResult.rows[0];
 
         // 4. Create Session
         const token = await createSession({
             user_id: user.user_id,
             email: user.email,
-            role: user.role
+            job_title: user.job_title
         });
 
         // 5. Set Cookie

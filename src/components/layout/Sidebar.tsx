@@ -4,18 +4,31 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logout } from "@/lib/auth-actions";
 import { cn } from "@/lib/utils";
+import { AuthSession } from "@/lib/auth";
 
-const navItems = [
-    { name: "Tablero", href: "/", icon: "dashboard" },
-    { name: "Inventario", href: "/inventory", icon: "inventory_2" },
-    { name: "Asignaciones", href: "/assignments", icon: "assignment_ind" },
-    { name: "Usuarios", href: "/users", icon: "group" },
-    { name: "Reportes", href: "/reports", icon: "description" },
-    { name: "Configuración", href: "/settings/categories", icon: "settings" },
-];
+interface SidebarProps {
+    session: AuthSession;
+    permissions: string[];
+}
 
-export function Sidebar() {
+export function Sidebar({ session, permissions }: SidebarProps) {
     const pathname = usePathname();
+
+    // Helper to check permission
+    const can = (code: string) => permissions.includes('*') || permissions.includes(code);
+
+    const navItems = [
+        { name: "Tablero", href: "/", icon: "dashboard", requiredPerm: null },
+        { name: "Inventario", href: "/inventory", icon: "inventory_2", requiredPerm: 'asset_view' },
+        { name: "Asignaciones", href: "/assignments", icon: "assignment_ind", requiredPerm: 'asset_view' },
+        { name: "Usuarios", href: "/users", icon: "group", requiredPerm: 'asset_view' }, // Creating users is probably admin, but viewing list ok for all?
+        { name: "Reportes", href: "/reports", icon: "description", requiredPerm: 'view_depreciation' },
+        { name: "Configuración", href: "/settings/categories", icon: "settings", requiredPerm: 'edit_valuation' },
+    ];
+
+    const filteredNav = navItems.filter(item =>
+        !item.requiredPerm || can(item.requiredPerm)
+    );
 
     return (
         <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shrink-0 h-full">
@@ -30,7 +43,7 @@ export function Sidebar() {
                     </div>
                 </div>
                 <nav className="flex flex-col gap-1 grow">
-                    {navItems.map((item) => {
+                    {filteredNav.map((item) => {
                         const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
                         return (
                             <Link
@@ -52,15 +65,13 @@ export function Sidebar() {
                 <div className="pt-6 border-t border-slate-100">
                     <div className="flex items-center gap-3 px-3">
                         <div
-                            className="size-8 rounded-full bg-slate-200 bg-cover bg-center"
-                            style={{
-                                backgroundImage:
-                                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDsxawJbgDsVe0-rMWHdDuZxR8OwvKH9ED9hzyK-u2q1LB_6jhf1Tzguql6-hTeKt1EFKn-2Ae3k4ApyASIZPvsF56hbN1o8OD0ACkOXvB4uD4mudxHTswydgRCTice5tf5EtIkF6rIptkYpAG97GIRn4d539AjVRzSIVAdJeA5RX1oS-24lsTac0LlpnNmaqgXbisNKIw5Cn9QAAO3KxO6Vyac05SXPCjPZAb_5Ea7nSVKqKtMUBcTJ3uIO1Ly4T2b39HcWm2PhWC9')",
-                            }}
-                        ></div>
-                        <div className="flex flex-col">
-                            <p className="text-xs font-bold text-slate-900">Alex Rivera</p>
-                            <p className="text-[10px] text-slate-500">Oficina CFO</p>
+                            className="size-8 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-500 text-xs"
+                        >
+                            {session.email.substring(0, 2).toUpperCase()}
+                        </div>
+                        <div className="flex flex-col overflow-hidden">
+                            <p className="text-xs font-bold text-slate-900 truncate w-24" title={session.email}>{session.email.split('@')[0]}</p>
+                            <p className="text-[10px] text-slate-500 truncate w-24" title={session.job_title}>{session.job_title}</p>
                         </div>
                         <form action={logout} className="ml-auto">
                             <button className="text-slate-400 hover:text-red-500 transition-colors" title="Cerrar Sesión">

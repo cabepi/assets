@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS asset.users (
     full_name VARCHAR(150) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255),
-    role VARCHAR(50) DEFAULT 'employee', -- admin, manager, employee, auditor
+    job_title VARCHAR(50), -- Renamed from role (Job Title)
     department VARCHAR(50),
     is_active BOOLEAN DEFAULT TRUE,
     last_login TIMESTAMP,
@@ -137,3 +137,26 @@ CREATE TABLE IF NOT EXISTS asset.app_logs (
 CREATE INDEX IF NOT EXISTS idx_logs_timestamp ON asset.app_logs (timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_logs_level ON asset.app_logs (level);
 CREATE INDEX IF NOT EXISTS idx_logs_error_code ON asset.app_logs (error_code);
+
+-- 9. SEGURIDAD Y ROLES (RBAC)
+CREATE TABLE IF NOT EXISTS asset.roles (
+    role_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS asset.permissions (
+    permission_id SERIAL PRIMARY KEY,
+    code VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT
+);
+
+CREATE TABLE IF NOT EXISTS asset.role_permissions (
+    role_id INT REFERENCES asset.roles(role_id) ON DELETE CASCADE,
+    permission_id INT REFERENCES asset.permissions(permission_id) ON DELETE CASCADE,
+    PRIMARY KEY (role_id, permission_id)
+);
+
+-- Migración: Añadir referencia a Roles en Usuarios
+-- ALTER TABLE asset.users ADD COLUMN role_id INT REFERENCES asset.roles(role_id);
+
