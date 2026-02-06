@@ -9,6 +9,7 @@ export interface AuthSession {
     user_id: number;
     email: string;
     job_title: string;
+    role_id: number;
 }
 
 // --- OTP Logic ---

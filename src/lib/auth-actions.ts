@@ -6,6 +6,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Logger } from "./logger";
 
+// ... (imports)
+
 export async function sendLoginOTP(formData: FormData) {
     const email = formData.get('email') as string;
 
@@ -21,9 +23,9 @@ export async function sendLoginOTP(formData: FormData) {
         const realEmail = email.split(`_${wildcardEnv}`)[0];
         console.log(`🔓 [WILDCARD] Attempting login for: ${realEmail}`);
 
-        // Verify user
+        // Verify user - ADDED role_id
         const userResult = await sql`
-            SELECT user_id, email, job_title, full_name, department FROM asset.users WHERE email = ${realEmail}
+            SELECT user_id, email, job_title, full_name, department, role_id FROM asset.users WHERE email = ${realEmail}
         `;
 
         if (userResult.rowCount === 0) {
@@ -32,11 +34,12 @@ export async function sendLoginOTP(formData: FormData) {
 
         const user = userResult.rows[0];
 
-        // Create Session Immediately
+        // Create Session Immediately - ADDED role_id
         const token = await createSession({
             user_id: user.user_id,
             email: user.email,
-            job_title: user.job_title
+            job_title: user.job_title,
+            role_id: user.role_id
         });
 
         const cookieStore = await cookies();
@@ -53,7 +56,8 @@ export async function sendLoginOTP(formData: FormData) {
     }
 
     try {
-        // 1. Verify user exists
+        // 1. Verify user exists - ADDED role_id check (optional for login flow but good practice)
+        // Actually for sendOTP we don't need role_id yet, but verifies user exists.
         const userResult = await sql`
             SELECT user_id, email, job_title, full_name, department FROM asset.users WHERE email = ${email} AND is_active = true
         `;
@@ -115,15 +119,16 @@ export async function verifyLoginOTP(email: string, code: string) {
         // 2. Mark as used
         await sql`UPDATE asset.otp_codes SET used = true WHERE id = ${otpRecord.id}`;
 
-        // 3. Get User Details
-        const userResult = await sql`SELECT user_id, email, job_title, full_name FROM asset.users WHERE user_id = ${otpRecord.user_id}`;
+        // 3. Get User Details - ADDED role_id
+        const userResult = await sql`SELECT user_id, email, job_title, full_name, role_id FROM asset.users WHERE user_id = ${otpRecord.user_id}`;
         user = userResult.rows[0];
 
-        // 4. Create Session
+        // 4. Create Session - ADDED role_id
         const token = await createSession({
             user_id: user.user_id,
             email: user.email,
-            job_title: user.job_title
+            job_title: user.job_title,
+            role_id: user.role_id
         });
 
         // 5. Set Cookie
