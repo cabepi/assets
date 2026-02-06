@@ -21,9 +21,9 @@ export function Sidebar({ session, permissions }: SidebarProps) {
         { name: "Tablero", href: "/", icon: "dashboard", requiredPerm: null },
         { name: "Inventario", href: "/inventory", icon: "inventory_2", requiredPerm: 'asset_view' },
         { name: "Asignaciones", href: "/assignments", icon: "assignment_ind", requiredPerm: 'asset_view' },
-        { name: "Usuarios", href: "/users", icon: "group", requiredPerm: 'asset_view' }, // Creating users is probably admin, but viewing list ok for all?
+        { name: "Usuarios", href: "/users", icon: "group", requiredPerm: 'view_users' },
         { name: "Reportes", href: "/reports", icon: "description", requiredPerm: 'view_depreciation' },
-        { name: "Configuración", href: "/settings/categories", icon: "settings", requiredPerm: 'edit_valuation' },
+        { name: "Configuración", href: "/settings/categories", icon: "settings", requiredPerm: 'view_settings' },
     ];
 
     const filteredNav = navItems.filter(item =>
