@@ -50,7 +50,7 @@ export const functions = {
 
 export async function getGeminiModel(systemInstruction: string) {
     const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash-preview-09-2025",
+        model: "gemini-2.5-flash-lite",
         systemInstruction: {
             parts: [{ text: systemInstruction }],
             role: "system"

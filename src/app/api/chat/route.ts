@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
         const modelTools = tools ? [{ functionDeclarations: tools as any }] : undefined;
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-2.5-flash-preview-09-2025",
+            model: "gemini-2.5-flash-lite",
             systemInstruction: { parts: [{ text: fullInstruction }], role: "system" },
             tools: modelTools
         });
