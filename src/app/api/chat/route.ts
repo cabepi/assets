@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
         const schemaContext = `
         Database Schema (Schema: asset):
-        - users (user_id, full_name, role_id, job_title)
+        - users (user_id, full_name, role_id, job_title, email)
         - roles (role_id, name)
         - assets (asset_id, name, description, status, current_value, acquisition_date, serial_number, category_id)
         - categories (category_id, name)
@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
         - If the user asks for data involving these tables, USE the 'queryDatabase' tool.
         - ALWAYS verify the schema before querying.
         - 'active' status in assets means it's in use.
+        - IMPORTANT: If the user asks "how many" (cuantos), use 'SELECT COUNT(*) ...'. Do NOT select all rows because results are limited to 10.
         `;
 
         const fullInstruction = `${caps.personality_instruction}\n${schemaContext}`;
@@ -74,14 +75,16 @@ export async function POST(req: NextRequest) {
         let result = await chat.sendMessage(message);
         let response = result.response;
 
-        // Check for function calls
-        // Gemini Pro supports automatic function calling in python, but nodejs might need manual loop or usage of 'sendMessage'.
-        // Actually, 'sendMessage' returns a response that might contain a function call.
+        // Loop to handle potential multiple function calls (Max 5 turns)
+        let maxTurns = 5;
 
-        const functionCalls = response.functionCalls();
+        while (maxTurns > 0) {
+            const functionCalls = response.functionCalls();
 
-        if (functionCalls && functionCalls.length > 0) {
-            // Execute calls
+            if (!functionCalls || functionCalls.length === 0) {
+                break; // No more function calls, we have text
+            }
+
             const call = functionCalls[0]; // Handle first call
             if (call.name === 'queryDatabase') {
                 const args = call.args as any;
@@ -95,7 +98,10 @@ export async function POST(req: NextRequest) {
                     }
                 }]);
                 response = result.response;
+            } else {
+                break; // Unknown tool or handling logic not implemented
             }
+            maxTurns--;
         }
 
         // Final check for text
