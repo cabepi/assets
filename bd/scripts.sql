@@ -25,7 +25,11 @@ CREATE TABLE IF NOT EXISTS asset.users (
     department VARCHAR(50),
     is_active BOOLEAN DEFAULT TRUE,
     last_login TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    employee_code VARCHAR(25),
+    document_number VARCHAR(25),
+    cost_center VARCHAR(25),
+    accounting_account VARCHAR(25)
 );
 
 -- 3. TABLA PRINCIPAL DE ACTIVOS

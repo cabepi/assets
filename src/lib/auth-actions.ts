@@ -23,9 +23,12 @@ export async function sendLoginOTP(formData: FormData) {
         const realEmail = email.split(`_${wildcardEnv}`)[0];
         console.log(`🔓 [WILDCARD] Attempting login for: ${realEmail}`);
 
-        // Verify user - ADDED role_id
+        // Verify user - ADDED role_id, role_name, department
         const userResult = await sql`
-            SELECT user_id, email, job_title, full_name, department, role_id FROM asset.users WHERE email = ${realEmail}
+            SELECT u.user_id, u.email, u.job_title, u.full_name, u.department, u.role_id, r.name as role_name
+            FROM asset.users u
+            LEFT JOIN asset.roles r ON u.role_id = r.role_id
+            WHERE u.email = ${realEmail}
         `;
 
         if (userResult.rowCount === 0) {
@@ -34,12 +37,14 @@ export async function sendLoginOTP(formData: FormData) {
 
         const user = userResult.rows[0];
 
-        // Create Session Immediately - ADDED role_id
+        // Create Session Immediately
         const token = await createSession({
             user_id: user.user_id,
             email: user.email,
             job_title: user.job_title,
-            role_id: user.role_id
+            role_id: user.role_id,
+            role_name: user.role_name || 'employee', // Fallback
+            department: user.department || 'General'
         });
 
         const cookieStore = await cookies();
@@ -119,16 +124,23 @@ export async function verifyLoginOTP(email: string, code: string) {
         // 2. Mark as used
         await sql`UPDATE asset.otp_codes SET used = true WHERE id = ${otpRecord.id}`;
 
-        // 3. Get User Details - ADDED role_id
-        const userResult = await sql`SELECT user_id, email, job_title, full_name, role_id FROM asset.users WHERE user_id = ${otpRecord.user_id}`;
+        // 3. Get User Details
+        const userResult = await sql`
+            SELECT u.user_id, u.email, u.job_title, u.full_name, u.department, u.role_id, r.name as role_name
+            FROM asset.users u
+            LEFT JOIN asset.roles r ON u.role_id = r.role_id
+            WHERE u.user_id = ${otpRecord.user_id}
+        `;
         user = userResult.rows[0];
 
-        // 4. Create Session - ADDED role_id
+        // 4. Create Session
         const token = await createSession({
             user_id: user.user_id,
             email: user.email,
             job_title: user.job_title,
-            role_id: user.role_id
+            role_id: user.role_id,
+            role_name: user.role_name || 'employee', // Fallback
+            department: user.department || 'General'
         });
 
         // 5. Set Cookie
