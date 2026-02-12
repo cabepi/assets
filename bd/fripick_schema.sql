@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS asset.processing_batches (
     total_records INT DEFAULT 0,
     comments TEXT,
     file_type VARCHAR(50) NOT NULL, -- ALMUERZO, FARMACIA
-    period VARCHAR(6) -- Format YYYYMM, e.g. 202601
+    period VARCHAR(6), -- Format YYYYMM, e.g. 202601
+    metadata JSONB
 );
 
 -- 2. Child Table: Consumption Details (Detalle de consumos)

@@ -28,7 +28,8 @@ async function migrate() {
                 total_records INT DEFAULT 0,
                 comments TEXT,
                 file_type VARCHAR(50) NOT NULL,
-                period VARCHAR(6)
+                period VARCHAR(6),
+                metadata JSONB
             )
         `;
 

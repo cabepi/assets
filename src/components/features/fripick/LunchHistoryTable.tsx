@@ -108,7 +108,7 @@ export function LunchHistoryTable({ uploads }: Props) {
                                     {upload.total_records}
                                 </td>
                                 <td className="px-6 py-3 text-right font-medium text-slate-700">
-                                    {formatMoney(upload.metadata?.totals?.facturado || 0)}
+                                    {formatMoney(upload.metadata?.totals?.total_billed || 0)}
                                 </td>
                                 <td className="px-6 py-3 text-center">
                                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -164,7 +164,7 @@ export function LunchHistoryTable({ uploads }: Props) {
                                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                                 <div>
                                                     <span className="block text-slate-500 text-xs">Cantidad Total</span>
-                                                    <span className="font-mono font-medium text-slate-900">{upload.metadata?.totals?.cantidad || 0}</span>
+                                                    <span className="font-mono font-medium text-slate-900">{upload.metadata?.totals?.quantity || 0}</span>
                                                 </div>
                                                 <div>
                                                     <span className="block text-slate-500 text-xs">Subtotal</span>
@@ -172,24 +172,24 @@ export function LunchHistoryTable({ uploads }: Props) {
                                                 </div>
                                                 <div>
                                                     <span className="block text-slate-500 text-xs">Impuestos</span>
-                                                    <span className="font-mono font-medium text-slate-900">{formatMoney(upload.metadata?.totals?.impuestos || 0)}</span>
+                                                    <span className="font-mono font-medium text-slate-900">{formatMoney(upload.metadata?.totals?.taxes || 0)}</span>
                                                 </div>
                                                 <div>
                                                     <span className="block text-slate-500 text-xs">Propina (10%)</span>
-                                                    <span className="font-mono font-medium text-slate-900">{formatMoney(upload.metadata?.totals?.propina || 0)}</span>
+                                                    <span className="font-mono font-medium text-slate-900">{formatMoney(upload.metadata?.totals?.tip_amount || 0)}</span>
                                                 </div>
                                                 <div className="pt-2 mt-2 border-t border-slate-100 col-span-2 md:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-4">
                                                     <div>
                                                         <span className="block text-slate-500 text-xs">Total Facturado</span>
-                                                        <span className="font-mono font-bold text-slate-900">{formatMoney(upload.metadata?.totals?.facturado || 0)}</span>
+                                                        <span className="font-mono font-bold text-slate-900">{formatMoney(upload.metadata?.totals?.total_billed || 0)}</span>
                                                     </div>
                                                     <div>
                                                         <span className="block text-slate-500 text-xs">Asignación</span>
-                                                        <span className="font-mono font-medium text-blue-700">{formatMoney(upload.metadata?.totals?.asignacion || 0)}</span>
+                                                        <span className="font-mono font-medium text-blue-700">{formatMoney(upload.metadata?.totals?.company_subsidy || 0)}</span>
                                                     </div>
                                                     <div>
                                                         <span className="block text-slate-500 text-xs">A Descontar</span>
-                                                        <span className="font-mono font-medium text-red-600">{formatMoney(upload.metadata?.totals?.descuento || 0)}</span>
+                                                        <span className="font-mono font-medium text-red-600">{formatMoney(upload.metadata?.totals?.employee_deduction || 0)}</span>
                                                     </div>
                                                 </div>
                                             </div>

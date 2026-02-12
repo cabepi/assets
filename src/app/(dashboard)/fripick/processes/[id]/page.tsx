@@ -22,8 +22,8 @@ export default async function ProcessDetailPage({
     const details = await getLunchDetails(id, query);
 
     // Calculate totals for summary
-    const totalAmount = details.reduce((sum, item) => sum + Number(item.total_facturado), 0);
-    const totalEmployees = new Set(details.map(d => d.codigo_empleado)).size;
+    const totalAmount = details.reduce((sum, item) => sum + Number(item.total_billed), 0);
+    const totalEmployees = new Set(details.map(d => d.employee_code)).size;
 
     return (
         <div className="flex flex-col h-full bg-slate-50">
@@ -69,17 +69,17 @@ export default async function ProcessDetailPage({
                             <tbody className="divide-y divide-slate-100">
                                 {details.map((item) => (
                                     <tr key={item.id} className="hover:bg-slate-50 transition-colors">
-                                        <td className="px-4 py-2 font-mono text-slate-500">{item.codigo_empleado}</td>
-                                        <td className="px-4 py-2 font-medium text-slate-900">{item.nombre_empleado}</td>
-                                        <td className="px-4 py-2 text-slate-500">{item.centro_costo}</td>
-                                        <td className="px-4 py-2 text-right">{item.cantidad}</td>
+                                        <td className="px-4 py-2 font-mono text-slate-500">{item.employee_code}</td>
+                                        <td className="px-4 py-2 font-medium text-slate-900">{item.employee_name}</td>
+                                        <td className="px-4 py-2 text-slate-500">{item.cost_center}</td>
+                                        <td className="px-4 py-2 text-right">{item.quantity}</td>
                                         <td className="px-4 py-2 text-right text-slate-500">{formatMoney(Number(item.subtotal))}</td>
-                                        <td className="px-4 py-2 text-right text-slate-500">{formatMoney(Number(item.impuestos))}</td>
-                                        <td className="px-4 py-2 text-right text-slate-500">{formatMoney(Number(item.propina_10))}</td>
-                                        <td className="px-4 py-2 text-right font-bold bg-slate-50">{formatMoney(Number(item.total_facturado))}</td>
-                                        <td className="px-4 py-2 text-right text-blue-700 bg-blue-50/50">{formatMoney(Number(item.asignacion))}</td>
+                                        <td className="px-4 py-2 text-right text-slate-500">{formatMoney(Number(item.taxes))}</td>
+                                        <td className="px-4 py-2 text-right text-slate-500">{formatMoney(Number(item.tip_amount))}</td>
+                                        <td className="px-4 py-2 text-right font-bold bg-slate-50">{formatMoney(Number(item.total_billed))}</td>
+                                        <td className="px-4 py-2 text-right text-blue-700 bg-blue-50/50">{formatMoney(Number(item.company_subsidy))}</td>
                                         <td className="px-4 py-2 text-right text-red-600 font-medium bg-red-50/50">
-                                            {Number(item.monto_a_descontar) > 0 ? formatMoney(Number(item.monto_a_descontar)) : '-'}
+                                            {Number(item.employee_deduction) > 0 ? formatMoney(Number(item.employee_deduction)) : '-'}
                                         </td>
                                     </tr>
                                 ))}
