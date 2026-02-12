@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { uploadLunchFile } from "@/lib/fripick-actions";
 
@@ -8,11 +8,21 @@ export function UploadProcessModal() {
     const [isOpen, setIsOpen] = useState(false);
     const [message, setMessage] = useState("");
     const [uploadResult, setUploadResult] = useState<{ success?: boolean; count?: number; error?: string } | null>(null);
+    const [periodo, setPeriodo] = useState("");
+    const [fileName, setFileName] = useState("");
+
+    const handlePeriodoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let val = e.target.value.replace(/[^\d]/g, ''); // Only digits
+        if (val.length > 6) val = val.slice(0, 6);
+        // Format as mm-yyyy
+        if (val.length > 2) {
+            val = val.slice(0, 2) + '-' + val.slice(2);
+        }
+        setPeriodo(val);
+    };
 
     const handleSubmit = async (formData: FormData) => {
-        // We can't use useFormStatus directly inside the submit handler to get pending state of the form
-        // But we are using action prop on form.
-        // We need to wrap the action to handle the result
+        formData.set('periodo', periodo);
         const result = await uploadLunchFile(formData);
         if (result.error) {
             setMessage(result.error);
@@ -24,6 +34,8 @@ export function UploadProcessModal() {
                 setIsOpen(false);
                 setMessage("");
                 setUploadResult(null);
+                setPeriodo("");
+                setFileName("");
             }, 2000);
         }
     };
@@ -49,21 +61,38 @@ export function UploadProcessModal() {
                         </div>
 
                         <form action={handleSubmit} className="flex flex-col gap-5">
-                            <div>
-                                <label htmlFor="tipo_archivo" className="block text-sm font-medium text-slate-700 mb-1">
-                                    Tipo de Archivo
-                                </label>
-                                <select
-                                    name="tipo_archivo"
-                                    id="tipo_archivo"
-                                    required
-                                    defaultValue=""
-                                    className="block w-full rounded-lg border-slate-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-                                >
-                                    <option value="" disabled>Seleccione una opción</option>
-                                    <option value="ALMUERZO">Almuerzo</option>
-                                    <option value="FARMACIA">Farmacia</option>
-                                </select>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label htmlFor="tipo_archivo" className="block text-sm font-medium text-slate-700 mb-1">
+                                        Tipo de Archivo
+                                    </label>
+                                    <select
+                                        name="tipo_archivo"
+                                        id="tipo_archivo"
+                                        required
+                                        defaultValue=""
+                                        className="block w-full rounded-lg border-slate-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                                    >
+                                        <option value="" disabled>Seleccione</option>
+                                        <option value="ALMUERZO">Almuerzo</option>
+                                        <option value="FARMACIA">Farmacia</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="periodo" className="block text-sm font-medium text-slate-700 mb-1">
+                                        Periodo
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="periodo"
+                                        value={periodo}
+                                        onChange={handlePeriodoChange}
+                                        placeholder="mm-yyyy"
+                                        maxLength={7}
+                                        required
+                                        className="block w-full rounded-lg border-slate-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                                    />
+                                </div>
                             </div>
 
                             <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:bg-slate-50 transition-colors relative">

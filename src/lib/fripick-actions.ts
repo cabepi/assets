@@ -13,6 +13,7 @@ export interface LunchUpload {
     total_registros: number;
     observaciones: string;
     tipo_archivo: string;
+    billing_period: string;
     metadata: any;
 }
 
@@ -34,6 +35,7 @@ export interface LunchDetail {
 export async function uploadLunchFile(formData: FormData) {
     const file = formData.get('file') as File;
     const tipoArchivo = formData.get('tipo_archivo') as string;
+    const periodoRaw = formData.get('periodo') as string; // mm-yyyy from UI
 
     if (!file) {
         return { error: "No se seleccionó ningún archivo." };
@@ -42,6 +44,14 @@ export async function uploadLunchFile(formData: FormData) {
     if (!tipoArchivo) {
         return { error: "Debe seleccionar un tipo de archivo." };
     }
+
+    if (!periodoRaw || !/^\d{2}-\d{4}$/.test(periodoRaw)) {
+        return { error: "Debe indicar un periodo válido (mm-yyyy)." };
+    }
+
+    // Convert mm-yyyy to yyyymm for DB storage
+    const [mes, anio] = periodoRaw.split('-');
+    const periodo = `${anio}${mes}`;
 
     try {
         const arrayBuffer = await file.arrayBuffer();
@@ -121,8 +131,8 @@ export async function uploadLunchFile(formData: FormData) {
         const metadata = { totals };
 
         const insertMaster = await sql`
-            INSERT INTO asset.procesamientos (nombre_archivo, tipo_archivo, estado, total_registros, metadata)
-            VALUES (${file.name}, ${tipoArchivo}, 'PROCESADO', ${rowsToInsert.length}, ${JSON.stringify(metadata)})
+            INSERT INTO asset.procesamientos (nombre_archivo, tipo_archivo, billing_period, estado, total_registros, metadata)
+            VALUES (${file.name}, ${tipoArchivo}, ${periodo}, 'PROCESADO', ${rowsToInsert.length}, ${JSON.stringify(metadata)})
             RETURNING id
         `;
         const cargaId = insertMaster.rows[0].id;

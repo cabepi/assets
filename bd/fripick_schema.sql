@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS asset.procesamientos (
     estado VARCHAR(50) DEFAULT 'PROCESADO', -- Ej: PENDIENTE, PROCESADO, ERROR
     total_registros INT DEFAULT 0,
     observaciones TEXT,
-    tipo_archivo VARCHAR(50) NOT NULL -- ALMUERZO, FARMACIA
+    tipo_archivo VARCHAR(50) NOT NULL, -- ALMUERZO, FARMACIA
+    billing_period VARCHAR(6) -- Format YYYYMM, e.g. 202601
 );
 
 -- 2. Tabla Hija: Detalle de los consumos (Relacionada al Excel)

@@ -54,6 +54,7 @@ export function LunchHistoryTable({ uploads }: Props) {
                         <th className="px-6 py-3 w-10"></th>
                         <th className="px-6 py-3">ID</th>
                         <th className="px-6 py-3">Tipo</th>
+                        <th className="px-6 py-3">Periodo</th>
                         <th className="px-6 py-3">Archivo</th>
                         <th className="px-6 py-3">Fecha Carga</th>
                         <th className="px-6 py-3 text-center">Registros</th>
@@ -84,6 +85,9 @@ export function LunchHistoryTable({ uploads }: Props) {
                                         }`}>
                                         {upload.tipo_archivo || 'ALMUERZO'}
                                     </span>
+                                </td>
+                                <td className="px-6 py-3 text-slate-600 font-mono text-xs">
+                                    {upload.billing_period ? `${upload.billing_period.slice(4, 6)}-${upload.billing_period.slice(0, 4)}` : '—'}
                                 </td>
                                 <td className="px-6 py-3 text-slate-700 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-green-600">description</span>
@@ -120,6 +124,15 @@ export function LunchHistoryTable({ uploads }: Props) {
                                         >
                                             <span className="material-symbols-outlined">edit_note</span>
                                         </button>
+
+                                        <a
+                                            href={`/api/fripick/edd/${upload.id}`}
+                                            download
+                                            className="p-1.5 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded transition-colors"
+                                            title="Descargar EDD Excel"
+                                        >
+                                            <span className="material-symbols-outlined">download</span>
+                                        </a>
 
                                         <Link
                                             href={`/fripick/processes/${upload.id}`}
