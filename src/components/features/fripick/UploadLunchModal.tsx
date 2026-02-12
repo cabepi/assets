@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { uploadLunchFile } from "@/lib/fripick-actions";
 
-export function UploadProcessModal() {
+export function UploadLunchModal() {
     const [isOpen, setIsOpen] = useState(false);
     const [message, setMessage] = useState("");
     const [uploadResult, setUploadResult] = useState<{ success?: boolean; count?: number; error?: string } | null>(null);
