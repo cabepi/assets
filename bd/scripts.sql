@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS asset.users (
     employee_code VARCHAR(25),
     document_number VARCHAR(25),
     cost_center VARCHAR(25),
-    accounting_account VARCHAR(25)
+    fripick_subsidy_account VARCHAR(25),
+    employee_receivable_account VARCHAR(25)
 );
 
 -- 3. TABLA PRINCIPAL DE ACTIVOS

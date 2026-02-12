@@ -57,7 +57,8 @@ export async function GET(
                 dc.employee_code,
                 u.employee_code as user_employee_code,
                 u.cost_center,
-                u.accounting_account
+                u.fripick_subsidy_account,
+                u.employee_receivable_account
             FROM asset.consumption_details dc
             LEFT JOIN asset.users u ON TRIM(dc.employee_code) = TRIM(u.employee_code)
             WHERE dc.batch_id = ${id}
@@ -81,7 +82,7 @@ export async function GET(
             "Beneficiario": "",
             "Nº documento externo": "",
             "Tipo mov.": "Cuenta",
-            "Nº cuenta": row.accounting_account || "",
+            "Nº cuenta": row.fripick_subsidy_account || "",
             "Nombre de cuenta": "Subsidio Friipick",
             "Descripción": descripcion,
             "Cód. divisa": "",
@@ -94,7 +95,7 @@ export async function GET(
             "Dim Flujo de Efectivo": "",
             "Dim Nominas": "",
             "Dim Proyectos": "",
-            "CXC EMPLEADOS": "",
+            "CXC EMPLEADOS": row.employee_receivable_account || "12301", // Default fallback if null
             "Presupuesto Ejecutado": "",
         }));
 

@@ -54,6 +54,19 @@ export async function uploadLunchFile(formData: FormData) {
     const period = `${year}${month}`;
 
     try {
+        // Check for existing upload for this period and type
+        const existingUpload = await sql`
+            SELECT id FROM asset.processing_batches 
+            WHERE period = ${period} AND file_type = ${fileType}
+            LIMIT 1
+        `;
+
+        if (existingUpload.rows.length > 0) {
+            return {
+                error: `Ya existe un archivo de tipo ${fileType} para el periodo ${periodRaw}. Debe eliminar el existente antes de cargar uno nuevo.`
+            };
+        }
+
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer); // Use Buffer for xlsx
         const workbook = XLSX.read(buffer, { type: 'buffer' });
@@ -132,9 +145,9 @@ export async function uploadLunchFile(formData: FormData) {
         for (const r of rawData) {
             // Check if it's a footer row (starts with "Total" in first few columns) or empty code
             // Access by column name directly
-            const codigo = String(r['CODIGO EMPLEADO'] || '').trim();
-            const nombre = r['NOMBRE'] || '';
-            const centro = String(r['CENTRO DE COSTO'] || '').trim();
+            let codigo = String(r['CODIGO EMPLEADO'] || '').trim();
+            let nombre = r['NOMBRE'] || '';
+            let centro = String(r['CENTRO DE COSTO'] || '').trim();
 
             const firstCols = [codigo, nombre, centro].join(' ').toLowerCase();
 
@@ -143,6 +156,23 @@ export async function uploadLunchFile(formData: FormData) {
             }
 
             if (!codigo) continue; // Skip empty rows
+
+            // Special Business Rule: Reassign specific employees to 10192 (Cándida Luz Hernández Santana)
+            if (fileType === 'ALMUERZO') {
+                const normalizedCode = codigo.replace(/[-\s]/g, '');
+                const normalizedName = nombre.toLowerCase();
+
+                // Check for Escarlin Maldonado Carela (027-0050946-2)
+                const isEscarlin = normalizedCode === '02700509462' || normalizedName.includes('escarlin maldonado');
+
+                // Check for Martha Delgado (00118935998)
+                const isMartha = normalizedCode === '00118935998' || normalizedName.includes('martha delgado');
+
+                if (isEscarlin || isMartha) {
+                    codigo = '10192';
+                    nombre = 'Cándida Luz Hernández Santana';
+                }
+            }
 
             // Handle propina based on file type
             let propina = 0;
