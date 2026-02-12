@@ -95,18 +95,32 @@ export function UploadLunchModal() {
                                 </div>
                             </div>
 
-                            <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:bg-slate-50 transition-colors relative">
+                            <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors relative ${fileName ? 'border-primary/50 bg-primary/5' : 'border-slate-300 hover:bg-slate-50'}`}>
                                 <input
                                     type="file"
                                     name="file"
                                     accept=".xlsx, .xls"
                                     required
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        setFileName(file ? file.name : "");
+                                    }}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                 />
                                 <div className="flex flex-col items-center gap-2 pointer-events-none">
-                                    <span className="material-symbols-outlined text-4xl text-slate-400">cloud_upload</span>
-                                    <p className="text-sm font-medium text-slate-600">Haz clic o arrastra el archivo aquí</p>
-                                    <p className="text-xs text-slate-400">Excel (.xlsx) solamente</p>
+                                    {fileName ? (
+                                        <>
+                                            <span className="material-symbols-outlined text-4xl text-primary">description</span>
+                                            <p className="text-sm font-medium text-slate-900">{fileName}</p>
+                                            <p className="text-xs text-primary font-medium">Click para cambiar archivo</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span className="material-symbols-outlined text-4xl text-slate-400">cloud_upload</span>
+                                            <p className="text-sm font-medium text-slate-600">Haz clic o arrastra el archivo aquí</p>
+                                            <p className="text-xs text-slate-400">Excel (.xlsx) solamente</p>
+                                        </>
+                                    )}
                                 </div>
                             </div>
 
