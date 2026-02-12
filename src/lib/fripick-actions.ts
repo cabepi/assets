@@ -60,6 +60,40 @@ export async function uploadLunchFile(formData: FormData) {
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
 
+        // Validate Column Headers
+        const headerRow = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0] as string[];
+
+        if (!headerRow || headerRow.length === 0) {
+            return { error: "El archivo parece estar vacío o no tiene encabezados." };
+        }
+
+        const requiredColumns = [
+            'CODIGO EMPLEADO',
+            'NOMBRE',
+            'CENTRO DE COSTO',
+            'CANTIDAD',
+            'SUBTOTAL',
+            'IMPUESTOS',
+            '10% PROPINA',
+            'FACTURADO',
+            'ASIGNACION'
+        ];
+
+        // Check for required columns
+        const missingColumns = requiredColumns.filter(col => !headerRow.includes(col));
+
+        // Special check for 'MONTO A DESCONTAR' which sometimes comes with double spaces
+        const discountColExists = headerRow.includes('MONTO A DESCONTAR') || headerRow.includes('MONTO  A DESCONTAR');
+
+        if (missingColumns.length > 0 || !discountColExists) {
+            const allMissing = [...missingColumns];
+            if (!discountColExists) allMissing.push('MONTO A DESCONTAR');
+
+            return {
+                error: `Estructura de archivo inválida. Faltan las columnas: ${allMissing.join(', ')}`
+            };
+        }
+
         // Convert to JSON (array of objects, using headers as keys)
         // defval: '' ensures empty cells have empty strings instead of undefined
         const rawData = XLSX.utils.sheet_to_json(sheet, { defval: '' }) as any[];
