@@ -60,6 +60,7 @@ export async function uploadLunchFile(formData: FormData) {
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
 
+
         // Validate Column Headers
         const headerRow = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0] as string[];
 
@@ -67,17 +68,23 @@ export async function uploadLunchFile(formData: FormData) {
             return { error: "El archivo parece estar vacío o no tiene encabezados." };
         }
 
-        const requiredColumns = [
+        const commonColumns = [
             'CODIGO EMPLEADO',
             'NOMBRE',
             'CENTRO DE COSTO',
             'CANTIDAD',
             'SUBTOTAL',
             'IMPUESTOS',
-            '10% PROPINA',
             'FACTURADO',
             'ASIGNACION'
         ];
+
+        let requiredColumns = [...commonColumns];
+
+        // Add specific columns based on file type
+        if (fileType === 'ALMUERZO') {
+            requiredColumns.push('10% PROPINA');
+        }
 
         // Check for required columns
         const missingColumns = requiredColumns.filter(col => !headerRow.includes(col));
@@ -90,7 +97,7 @@ export async function uploadLunchFile(formData: FormData) {
             if (!discountColExists) allMissing.push('MONTO A DESCONTAR');
 
             return {
-                error: `Estructura de archivo inválida. Faltan las columnas: ${allMissing.join(', ')}`
+                error: `Estructura de archivo inválida para ${fileType}. Faltan las columnas: ${allMissing.join(', ')}`
             };
         }
 
@@ -113,13 +120,13 @@ export async function uploadLunchFile(formData: FormData) {
 
         // Metadata Accumulators
         const totals = {
-            cantidad: 0,
+            quantity: 0,
             subtotal: 0,
-            impuestos: 0,
-            propina: 0,
-            facturado: 0,
-            asignacion: 0,
-            descuento: 0
+            taxes: 0,
+            tip_amount: 0,
+            total_billed: 0,
+            company_subsidy: 0,
+            employee_deduction: 0
         };
 
         for (const r of rawData) {
@@ -137,29 +144,45 @@ export async function uploadLunchFile(formData: FormData) {
 
             if (!codigo) continue; // Skip empty rows
 
+            // Handle propina based on file type
+            let propina = 0;
+            if (fileType === 'ALMUERZO') {
+                propina = parseCurrency(r['10% PROPINA']);
+            } else {
+                // For FARMACIA, user explicitly requested NULL. 
+                // However, our totals accumulator uses number matching the logic of previous code.
+                // We will use 0 for totals calculation to avoid NaN, but insert NULL in DB if needed.
+                propina = 0;
+            }
+
             const rowData = {
                 codigo: codigo,
                 nombre: nombre,
                 centro: centro,
                 cantidad: Number(r['CANTIDAD'] || 0),
                 subtotal: parseCurrency(r['SUBTOTAL']),
-                impuestos: parseCurrency(r['IMPUESTOS']),
-                propina: parseCurrency(r['10% PROPINA']),
-                facturado: parseCurrency(r['FACTURADO']),
-                asignacion: parseCurrency(r['ASIGNACION']),
-                descuento: parseCurrency(r['MONTO A DESCONTAR'] || r['MONTO  A DESCONTAR']) // Handle potential double space typo in user request vs file
+                taxes: parseCurrency(r['IMPUESTOS']),
+                tip_amount: propina, // This is for accumulator and local logic
+                total_billed: parseCurrency(r['FACTURADO']),
+                company_subsidy: parseCurrency(r['ASIGNACION']),
+                employee_deduction: parseCurrency(r['MONTO A DESCONTAR'] || r['MONTO  A DESCONTAR'])
             };
 
-            rowsToInsert.push(rowData);
+            rowsToInsert.push({
+                ...rowData,
+                // Explicitly valid tip for DB insertion later (null for pharmacy?)
+                // User said "cuando sea farmacia tendra el valor nulo".
+                db_tip_amount: fileType === 'FARMACIA' ? null : rowData.tip_amount
+            });
 
             // Accumulate totals
-            totals.cantidad += rowData.cantidad;
+            totals.quantity += rowData.cantidad;
             totals.subtotal += rowData.subtotal;
-            totals.impuestos += rowData.impuestos;
-            totals.propina += rowData.propina;
-            totals.facturado += rowData.facturado;
-            totals.asignacion += rowData.asignacion;
-            totals.descuento += rowData.descuento;
+            totals.taxes += rowData.taxes;
+            totals.tip_amount += rowData.tip_amount;
+            totals.total_billed += rowData.total_billed;
+            totals.company_subsidy += rowData.company_subsidy;
+            totals.employee_deduction += rowData.employee_deduction;
         }
 
         const metadata = { totals };
