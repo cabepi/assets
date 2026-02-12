@@ -253,11 +253,11 @@ export async function uploadLunchFile(formData: FormData) {
                     ${item.centro},
                     ${item.cantidad},
                     ${item.subtotal},
-                    ${item.impuestos},
-                    ${item.propina},
-                    ${item.facturado},
-                    ${item.asignacion},
-                    ${item.descuento}
+                    ${item.taxes},
+                    ${item.db_tip_amount},
+                    ${item.total_billed},
+                    ${item.company_subsidy},
+                    ${item.employee_deduction}
                 )
              `;
         }
@@ -332,5 +332,16 @@ export async function updateLunchObservation(id: number, observation: string) {
     } catch (error) {
         console.error('Update Observation Error:', error);
         return { error: 'Error actualizando la observación' };
+    }
+}
+
+export async function acceptLunchUpload(id: number) {
+    try {
+        await sql`UPDATE asset.processing_batches SET status = 'ACEPTADO' WHERE id = ${id}`;
+        revalidatePath('/fripick/processes');
+        return { success: true };
+    } catch (error) {
+        console.error('Accept Upload Error:', error);
+        return { error: 'Error aceptando el archivo' };
     }
 }
