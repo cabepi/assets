@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatInTimeZone } from "date-fns-tz";
 import { LunchUpload, deleteLunchUpload, acceptLunchUpload } from "@/lib/fripick-actions";
 import { ObservationModal } from "./ObservationModal";
+import { EddGenerationModal } from "./EddGenerationModal";
 
 interface Props {
     uploads: LunchUpload[];
@@ -16,6 +17,10 @@ export function LunchHistoryTable({ uploads }: Props) {
         isOpen: false,
         uploadId: 0,
         observation: "",
+    });
+    const [eddModal, setEddModal] = useState<{ isOpen: boolean; period: string }>({
+        isOpen: false,
+        period: "",
     });
 
     const toggleRow = (id: number) => {
@@ -45,6 +50,14 @@ export function LunchHistoryTable({ uploads }: Props) {
                 alert(result.error);
             }
         }
+    };
+
+    const openEddModal = (period: string) => {
+        setEddModal({ isOpen: true, period });
+    };
+
+    const closeEddModal = () => {
+        setEddModal({ ...eddModal, isOpen: false });
     };
 
     // Group uploads by period
@@ -125,8 +138,8 @@ export function LunchHistoryTable({ uploads }: Props) {
                                     </div>
                                 ) : (
                                     <button
+                                        onClick={() => openEddModal(periodKey)}
                                         className="btn btn-primary flex items-center gap-2 shadow-sm shadow-blue-500/20"
-                                        onClick={() => alert(`Generando EDD Unificado para periodo ${periodKey}... (Lógica pendiente)`)}
                                     >
                                         <span className="material-symbols-outlined">sim_card_download</span>
                                         Generar Archivo EDD
@@ -329,6 +342,12 @@ export function LunchHistoryTable({ uploads }: Props) {
                     uploadId={observationModal.uploadId}
                     initialObservation={observationModal.observation}
                     key={observationModal.uploadId}
+                />
+
+                <EddGenerationModal
+                    isOpen={eddModal.isOpen}
+                    onClose={closeEddModal}
+                    period={eddModal.period}
                 />
             </div>
         </div>
