@@ -46,22 +46,22 @@ export async function GET(
     try {
         // Get procesamiento to retrieve billing_period
         const procResult = await sql`
-            SELECT billing_period FROM asset.procesamientos WHERE id = ${id}
+            SELECT period FROM asset.processing_batches WHERE id = ${id}
         `;
-        const periodoStored = procResult.rows[0]?.billing_period || null;
+        const periodoStored = procResult.rows[0]?.period || null;
 
-        // Join detalles_consumos with users on employee_code
+        // Join consumption_details with users on employee_code
         const result = await sql`
             SELECT 
-                dc.monto_a_descontar,
-                dc.codigo_empleado,
-                u.employee_code,
+                dc.employee_deduction,
+                dc.employee_code,
+                u.employee_code as user_employee_code,
                 u.cost_center,
                 u.accounting_account
-            FROM asset.detalles_consumos dc
-            LEFT JOIN asset.users u ON TRIM(dc.codigo_empleado) = TRIM(u.employee_code)
-            WHERE dc.carga_id = ${id}
-              AND dc.monto_a_descontar > 0
+            FROM asset.consumption_details dc
+            LEFT JOIN asset.users u ON TRIM(dc.employee_code) = TRIM(u.employee_code)
+            WHERE dc.batch_id = ${id}
+              AND dc.employee_deduction > 0
             ORDER BY dc.id ASC
         `;
 
@@ -85,12 +85,12 @@ export async function GET(
             "Nombre de cuenta": "Subsidio Friipick",
             "Descripción": descripcion,
             "Cód. divisa": "",
-            " Importe ": Number(row.monto_a_descontar),
-            " Importe ($) ": Number(row.monto_a_descontar),
+            " Importe ": Number(row.employee_deduction),
+            " Importe ($) ": Number(row.employee_deduction),
             "Tipo contrapartida": "Cuenta",
             "Cta. contrapartida": "",
             "Dim Centro Costo": formatCostCenter(row.cost_center),
-            "Dim Empleados": row.employee_code || row.codigo_empleado || "",
+            "Dim Empleados": row.user_employee_code || row.employee_code || "",
             "Dim Flujo de Efectivo": "",
             "Dim Nominas": "",
             "Dim Proyectos": "",

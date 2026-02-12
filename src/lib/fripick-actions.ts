@@ -7,51 +7,51 @@ import { revalidatePath } from "next/cache";
 // Type definitions
 export interface LunchUpload {
     id: number;
-    nombre_archivo: string;
-    fecha_carga: Date;
-    estado: string;
-    total_registros: number;
-    observaciones: string;
-    tipo_archivo: string;
-    billing_period: string;
+    file_name: string;
+    upload_date: Date;
+    status: string;
+    total_records: number;
+    comments: string;
+    file_type: string;
+    period: string;
     metadata: any;
 }
 
 export interface LunchDetail {
     id: number;
-    carga_id: number;
-    codigo_empleado: string;
-    nombre_empleado: string;
-    centro_costo: string;
-    cantidad: number;
+    batch_id: number;
+    employee_code: string;
+    employee_name: string;
+    cost_center: string;
+    quantity: number;
     subtotal: number;
-    impuestos: number;
-    propina_10: number;
-    total_facturado: number;
-    asignacion: number;
-    monto_a_descontar: number;
+    taxes: number;
+    tip_amount: number;
+    total_billed: number;
+    company_subsidy: number;
+    employee_deduction: number;
 }
 
 export async function uploadLunchFile(formData: FormData) {
     const file = formData.get('file') as File;
-    const tipoArchivo = formData.get('tipo_archivo') as string;
-    const periodoRaw = formData.get('periodo') as string; // mm-yyyy from UI
+    const fileType = formData.get('tipo_archivo') as string;
+    const periodRaw = formData.get('periodo') as string; // mm-yyyy from UI
 
     if (!file) {
         return { error: "No se seleccionó ningún archivo." };
     }
 
-    if (!tipoArchivo) {
+    if (!fileType) {
         return { error: "Debe seleccionar un tipo de archivo." };
     }
 
-    if (!periodoRaw || !/^\d{2}-\d{4}$/.test(periodoRaw)) {
+    if (!periodRaw || !/^\d{2}-\d{4}$/.test(periodRaw)) {
         return { error: "Debe indicar un periodo válido (mm-yyyy)." };
     }
 
     // Convert mm-yyyy to yyyymm for DB storage
-    const [mes, anio] = periodoRaw.split('-');
-    const periodo = `${anio}${mes}`;
+    const [month, year] = periodRaw.split('-');
+    const period = `${year}${month}`;
 
     try {
         const arrayBuffer = await file.arrayBuffer();
@@ -130,32 +130,37 @@ export async function uploadLunchFile(formData: FormData) {
 
         const metadata = { totals };
 
+        const comments = formData.get('observaciones') as string;
+
         const insertMaster = await sql`
-            INSERT INTO asset.procesamientos (nombre_archivo, tipo_archivo, billing_period, estado, total_registros, metadata)
-            VALUES (${file.name}, ${tipoArchivo}, ${periodo}, 'PROCESADO', ${rowsToInsert.length}, ${JSON.stringify(metadata)})
+            INSERT INTO asset.processing_batches (file_name, file_type, period, status, total_records, comments, metadata)
+            VALUES (${file.name}, ${fileType}, ${period}, 'PROCESADO', ${rowsToInsert.length}, ${comments ? comments : null}, ${JSON.stringify(metadata)})
             RETURNING id
         `;
-        const cargaId = insertMaster.rows[0].id;
+        // Note: 'comments' was undefined in original usage above, assuming null or empty string if not provided in form. 
+        // Original code didn't accept comments in uploadLunchFile. Added null check.
+
+        const batchId = insertMaster.rows[0].id;
 
         // Batch insert could be optimized, but loop is okay for moderate size
         // If file is huge -> might timeout. Assuming reasonable size (<1000 rows).
 
         for (const item of rowsToInsert) {
             await sql`
-                INSERT INTO asset.detalles_consumos (
-                    carga_id, 
-                    codigo_empleado, 
-                    nombre_empleado, 
-                    centro_costo, 
-                    cantidad, 
+                INSERT INTO asset.consumption_details (
+                    batch_id, 
+                    employee_code, 
+                    employee_name, 
+                    cost_center, 
+                    quantity, 
                     subtotal, 
-                    impuestos, 
-                    propina_10, 
-                    total_facturado, 
-                    asignacion, 
-                    monto_a_descontar
+                    taxes, 
+                    tip_amount, 
+                    total_billed, 
+                    company_subsidy, 
+                    employee_deduction
                 ) VALUES (
-                    ${cargaId},
+                    ${batchId},
                     ${item.codigo},
                     ${item.nombre},
                     ${item.centro},
@@ -182,8 +187,8 @@ export async function uploadLunchFile(formData: FormData) {
 export async function getLunchUploads() {
     try {
         const result = await sql`
-            SELECT * FROM asset.procesamientos 
-            ORDER BY fecha_carga DESC
+            SELECT * FROM asset.processing_batches 
+            ORDER BY upload_date DESC
         `;
         return result.rows as LunchUpload[];
     } catch (error) {
@@ -198,12 +203,12 @@ export async function getLunchDetails(uploadId: number, query?: string) {
         if (query) {
             const searchPattern = `%${query}%`;
             const result = await sql`
-                SELECT * FROM asset.detalles_consumos 
-                WHERE carga_id = ${uploadId}
+                SELECT * FROM asset.consumption_details 
+                WHERE batch_id = ${uploadId}
                 AND (
-                    codigo_empleado ILIKE ${searchPattern} OR
-                    nombre_empleado ILIKE ${searchPattern} OR
-                    centro_costo ILIKE ${searchPattern}
+                    employee_code ILIKE ${searchPattern} OR
+                    employee_name ILIKE ${searchPattern} OR
+                    cost_center ILIKE ${searchPattern}
                 )
                 ORDER BY id ASC
             `;
@@ -211,8 +216,8 @@ export async function getLunchDetails(uploadId: number, query?: string) {
         }
 
         const result = await sql`
-            SELECT * FROM asset.detalles_consumos 
-            WHERE carga_id = ${uploadId}
+            SELECT * FROM asset.consumption_details 
+            WHERE batch_id = ${uploadId}
             ORDER BY id ASC
         `;
         return result.rows as LunchDetail[];
@@ -224,7 +229,7 @@ export async function getLunchDetails(uploadId: number, query?: string) {
 
 export async function deleteLunchUpload(uploadId: number) {
     try {
-        await sql`DELETE FROM asset.procesamientos WHERE id = ${uploadId}`;
+        await sql`DELETE FROM asset.processing_batches WHERE id = ${uploadId}`;
         revalidatePath('/fripick/processes');
         return { success: true };
     } catch (error) {
@@ -234,7 +239,7 @@ export async function deleteLunchUpload(uploadId: number) {
 }
 export async function updateLunchObservation(id: number, observation: string) {
     try {
-        await sql`UPDATE asset.procesamientos SET observaciones = ${observation} WHERE id = ${id}`;
+        await sql`UPDATE asset.processing_batches SET comments = ${observation} WHERE id = ${id}`;
         revalidatePath('/fripick/processes');
         return { success: true };
     } catch (error) {

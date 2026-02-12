@@ -30,7 +30,7 @@ export function LunchHistoryTable({ uploads }: Props) {
         setObservationModal({
             isOpen: true,
             uploadId: upload.id,
-            observation: upload.observaciones || "",
+            observation: upload.comments || "",
         });
     };
 
@@ -79,40 +79,40 @@ export function LunchHistoryTable({ uploads }: Props) {
                                 </td>
                                 <td className="px-6 py-3 font-medium text-slate-900">#{upload.id}</td>
                                 <td className="px-6 py-3">
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${upload.tipo_archivo === 'FARMACIA'
+                                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${upload.file_type === 'FARMACIA'
                                         ? 'bg-purple-100 text-purple-800'
                                         : 'bg-blue-100 text-blue-800'
                                         }`}>
-                                        {upload.tipo_archivo || 'ALMUERZO'}
+                                        {upload.file_type || 'ALMUERZO'}
                                     </span>
                                 </td>
                                 <td className="px-6 py-3 text-slate-600 font-mono text-xs">
-                                    {upload.billing_period ? `${upload.billing_period.slice(4, 6)}-${upload.billing_period.slice(0, 4)}` : '—'}
+                                    {upload.period ? `${upload.period.slice(4, 6)}-${upload.period.slice(0, 4)}` : '—'}
                                 </td>
                                 <td className="px-6 py-3 text-slate-700 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-green-600">description</span>
                                     <div className="flex flex-col">
-                                        <span>{upload.nombre_archivo}</span>
-                                        {upload.observaciones && (
+                                        <span>{upload.file_name}</span>
+                                        {upload.comments && (
                                             <span className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
                                                 <span className="material-symbols-outlined text-[10px]">sticky_note_2</span>
-                                                {upload.observaciones.length > 50 ? upload.observaciones.substring(0, 50) + '...' : upload.observaciones}
+                                                {upload.comments.length > 50 ? upload.comments.substring(0, 50) + '...' : upload.comments}
                                             </span>
                                         )}
                                     </div>
                                 </td>
                                 <td className="px-6 py-3 text-slate-500">
-                                    {formatInTimeZone(new Date(upload.fecha_carga), 'America/Santo_Domingo', "dd/MM/yyyy HH:mm")}
+                                    {formatInTimeZone(new Date(upload.upload_date), 'America/Santo_Domingo', "dd/MM/yyyy HH:mm")}
                                 </td>
                                 <td className="px-6 py-3 text-center font-mono">
-                                    {upload.total_registros}
+                                    {upload.total_records}
                                 </td>
                                 <td className="px-6 py-3 text-right font-medium text-slate-700">
                                     {formatMoney(upload.metadata?.totals?.facturado || 0)}
                                 </td>
                                 <td className="px-6 py-3 text-center">
                                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        {upload.estado}
+                                        {upload.status}
                                     </span>
                                 </td>
                                 <td className="px-6 py-3 text-right">
@@ -194,10 +194,10 @@ export function LunchHistoryTable({ uploads }: Props) {
                                                 </div>
                                             </div>
 
-                                            {upload.observaciones && (
+                                            {upload.comments && (
                                                 <div className="mt-4 pt-3 border-t border-slate-100">
                                                     <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Observaciones</h4>
-                                                    <p className="text-sm text-slate-700 whitespace-pre-wrap">{upload.observaciones}</p>
+                                                    <p className="text-sm text-slate-700 whitespace-pre-wrap">{upload.comments}</p>
                                                 </div>
                                             )}
                                         </div>
