@@ -1,4 +1,4 @@
-import { UploadProcessModal } from "@/components/features/fripick/UploadLunchModal";
+import { UploadLunchModal } from "@/components/features/fripick/UploadLunchModal";
 import { LunchHistoryTable } from "@/components/features/fripick/LunchHistoryTable";
 import { getLunchUploads } from "@/lib/fripick-actions";
 
@@ -13,7 +13,7 @@ export default async function ProcessesPage() {
                     <p className="text-sm text-slate-500">Gestión de Cargas de Almuerzo y Farmacia</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <UploadProcessModal />
+                    <UploadLunchModal />
                 </div>
             </header>
 
