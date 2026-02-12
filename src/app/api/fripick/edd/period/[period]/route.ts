@@ -86,8 +86,56 @@ export async function GET(
         const periodoDesc = formatPeriodForDescription(storedPeriod);
         const descripcion = `Consumos almuerzo y farmacia ${periodoDesc}`;
 
-        // 3. Build data rows (Unified List)
-        const excelRows = rows.map((row) => ({
+        // 3. Process data: Group by employee, calculate totals, and add surplus rows
+        const groupedRows: Record<string, typeof rows> = {};
+
+        rows.forEach(row => {
+            const code = row.employee_code || "UNKNOWN";
+            if (!groupedRows[code]) {
+                groupedRows[code] = [];
+            }
+            groupedRows[code].push(row);
+        });
+
+        const finalRows: any[] = [];
+
+        // Sort employees by code to ensure consistent order
+        const employeeCodes = Object.keys(groupedRows).sort();
+
+        employeeCodes.forEach(code => {
+            const employeeRows = groupedRows[code];
+            let totalBilled = 0;
+
+            // Add original rows and sum total
+            employeeRows.forEach(row => {
+                finalRows.push(row);
+                totalBilled += Number(row.total_billed || 0);
+            });
+
+            // Check for surplus > 5000
+            if (totalBilled > 5000) {
+                const surplusAmount = totalBilled - 5000;
+                // Create surplus row based on the first row of the employee (to inherit metadata)
+                const baseRow = employeeRows[0];
+
+                const surplusRow = {
+                    ...baseRow,
+                    is_surplus: true, // Flag for potential debugging
+                    employee_deduction: surplusAmount, // Not used for calculation but for consistency
+                    total_billed: surplusAmount, // This is the amount to show
+                    // Override account with receivable account
+                    // Logic: "Nº cuenta se le debe asignar el valor de campo employee_receivable_account"
+                    // In current structure, `fripick_subsidy_account` maps to "Nº cuenta".
+                    // So we override it here for the mapper below.
+                    fripick_subsidy_account: baseRow.employee_receivable_account || "12301",
+                    // Description remains same? "Los demas campos se calculan como ya sabes hacerlo" -> Yes.
+                };
+                finalRows.push(surplusRow);
+            }
+        });
+
+        // 4. Build Excel data rows from final list
+        const excelRows = finalRows.map((row) => ({
             "Fecha registro": fecha,
             "Fecha de IVA": fecha,
             "Tipo documento": "",
@@ -110,7 +158,7 @@ export async function GET(
             "Dim Flujo de Efectivo": "",
             "Dim Nominas": "",
             "Dim Proyectos": "",
-            "CXC EMPLEADOS": row.employee_receivable_account || "12301", // Default fallback if null
+            "CXC EMPLEADOS": "",
             "Presupuesto Ejecutado": "",
         }));
 
